@@ -6,6 +6,7 @@ import config from "../config/config.js";
 import { serialize } from "cookie";
 
 export async function register(req, res) {
+    try {
         const errors = validationResult(req);
         console.log({ errors });
         if (!errors.isEmpty()) {
