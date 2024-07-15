@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import config from "../config/config.js";
 import User from "../models/userModel.js";
 
@@ -6,8 +7,47 @@ export const getUsers = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
+    const whereConditions = {};
+    if (req.query.name) {
+        whereConditions.name = { [Op.like]: `%${req.query.name}%` };
+    }
+    if (req.query.last_name) {
+        whereConditions.last_name = { [Op.like]: `%${req.query.last_name}%` };
+    }
+    if (req.query.email) {
+        whereConditions.email = { [Op.like]: `%${req.query.email}%` };
+    }
+    if (req.query.dni) {
+        whereConditions.dni = req.query.dni;
+    }
+
+    // Can filter by birthday. Format: YYYY-MM-DD. Example:
+    //  // ?birthdayBefore=2000-01-01
+    //  // ?birthdayAfter=2000-01-01
+    //  // ?birthdayEqual=2000-01-01
+
+    if (req.query.birthdayBefore) {
+        whereConditions.birthday = {
+            ...whereConditions.birthday,
+            [Op.lt]: new Date(req.query.birthdayBefore),
+        };
+    }
+    if (req.query.birthdayAfter) {
+        whereConditions.birthday = {
+            ...whereConditions.birthday,
+            [Op.gt]: new Date(req.query.birthdayAfter),
+        };
+    }
+    if (req.query.birthdayEqual) {
+        whereConditions.birthday = {
+            ...whereConditions.birthday,
+            [Op.eq]: new Date(req.query.birthdayEqual),
+        };
+    }
+
     try {
         const { count, rows } = await User.findAndCountAll({
+            where: whereConditions,
             offset,
             limit,
         });
