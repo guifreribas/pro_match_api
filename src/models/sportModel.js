@@ -10,14 +10,7 @@ const Sport = sequelize.define(
             autoIncrement: true,
         },
         name: {
-            type: DataTypes.ENUM(
-                "FUTBOL",
-                "BASQUET",
-                "VOLEIBOL",
-                "PADEL",
-                "EA SPORT",
-                "GENERIC"
-            ),
+            type: DataTypes.STRING(30),
             allowNull: false,
         },
     },
