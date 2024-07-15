@@ -1,12 +1,60 @@
 import Team from "../models/teamModel.js";
+import config from "../config/config.js";
 
 export const getTeams = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const whereConditions = {};
+    if (req.query.name) {
+        whereConditions.name = req.query.name;
+    }
+    if (req.query.avatar) {
+        whereConditions.avatar = req.query.avatar;
+    }
+    if (req.query.sport_id) {
+        whereConditions.sport_id = req.query.sport_id;
+    }
     try {
-        const teams = await Team.findAll();
+        const { count, rows } = await Team.findAndCountAll({
+            where: whereConditions,
+            offset,
+            limit,
+        });
+        const totalPages = Math.ceil(count / limit);
+        const previousLink =
+            page > 1 ? `${config.API_BASE_URL}/teams?page=${page - 1}` : null;
+        const nextLink =
+            page < totalPages
+                ? `${config.API_BASE_URL}/teams?page=${page + 1}`
+                : null;
+
         res.status(200).json({
             success: true,
             message: "Teams fetched successfully",
-            data: teams,
+            data: {
+                items: rows.map((team) => ({
+                    id_team: team.id_team,
+                    name: team.name,
+                    avatar: team.avatar,
+                    sport_id: team.sport_id,
+                })),
+                itemCount: rows.length,
+                totalItems: count,
+                currentPage: page,
+                pageSize: limit,
+                totalPages: totalPages,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+            },
+            links: {
+                self: `${config.API_BASE_URL}/teams?page=${page}`,
+                first: `${config.API_BASE_URL}/teams?page=1`,
+                last: `${config.API_BASE_URL}/teams?page=${totalPages}`,
+                next: nextLink,
+                previous: previousLink,
+            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
