@@ -1,12 +1,74 @@
+import { Op } from "sequelize";
 import Category from "../models/categoryModel.js";
+import config from "../config/config.js";
 
 export const getCategories = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const whereConditions = {};
+    if (req.query.name) {
+        whereConditions.name = { [Op.like]: `%${req.query.name}%` };
+    }
+    if (req.query.organization_id) {
+        whereConditions.organization_id = req.query.organization_id;
+    }
+    if (req.query.competition_id) {
+        whereConditions.competition_id = req.query.competition_id;
+    }
+    if (req.query.sport_id) {
+        whereConditions.sport_id = req.query.sport_id;
+    }
+    if (req.query.user_id) {
+        whereConditions.user_id = req.query.user_id;
+    }
+
     try {
-        const categories = await Category.findAll();
+        const { count, rows } = await Category.findAndCountAll({
+            where: whereConditions,
+            offset,
+            limit,
+        });
+        const totalPages = Math.ceil(count / limit);
+        const previousLink =
+            page > 1
+                ? `${config.API_BASE_URL}/categories?page=${page - 1}`
+                : null;
+        const nextLink =
+            page < totalPages
+                ? `${config.API_BASE_URL}/categories?page=${page + 1}`
+                : null;
+
         res.status(200).json({
             success: true,
             message: "Categories fetched successfully",
-            data: categories,
+            data: {
+                items: rows.map((category) => ({
+                    id_category: category.id_category,
+                    name: category.name,
+                    organization_id: category.organization_id,
+                    competition_id: category.competition_id,
+                    sport_id: category.sport_id,
+                    user_id: category.user_id,
+                    createdAt: category.createdAt,
+                    updatedAt: category.updatedAt,
+                })),
+                itemCount: rows.length,
+                totalItems: count,
+                currentPage: page,
+                pageSize: limit,
+                totalPages: totalPages,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+            },
+            links: {
+                self: `${config.API_BASE_URL}/categories?page=${page}`,
+                first: `${config.API_BASE_URL}/categories?page=1`,
+                last: `${config.API_BASE_URL}/categories?page=${totalPages}`,
+                next: nextLink,
+                previous: previousLink,
+            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
