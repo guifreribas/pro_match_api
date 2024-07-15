@@ -1,12 +1,71 @@
 import Organization from "../models/organizationModel.js";
+import config from "../config/config.js";
 
 export const getOrganizations = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const whereConditions = {};
+    if (req.query.name) {
+        whereConditions.name = req.query.name;
+    }
+    if (req.query.logo) {
+        whereConditions.logo = req.query.logo;
+    }
+    if (req.query.competition_id) {
+        whereConditions.competition_id = req.query.competition_id;
+    }
+    if (req.query.sport_id) {
+        whereConditions.sport_id = req.query.sport_id;
+    }
+    if (req.query.user_id) {
+        whereConditions.user_id = req.query.user_id;
+    }
+
     try {
-        const organizations = await Organization.findAll();
+        const { count, rows } = await Organization.findAndCountAll({
+            where: whereConditions,
+            offset,
+            limit,
+        });
+        const totalPages = Math.ceil(count / limit);
+        const previousLink =
+            page > 1
+                ? `${config.API_BASE_URL}/organizations?page=${page - 1}`
+                : null;
+        const nextLink =
+            page < totalPages
+                ? `${config.API_BASE_URL}/organizations?page=${page + 1}`
+                : null;
+
         res.status(200).json({
             success: true,
             message: "Organizations fetched successfully",
-            data: organizations,
+            data: {
+                items: rows.map((organization) => ({
+                    id_organization: organization.id_organization,
+                    name: organization.name,
+                    logo: organization.logo,
+                    competition_id: organization.competition_id,
+                    sport_id: organization.sport_id,
+                    user_id: organization.user_id,
+                })),
+                itemCount: rows.length,
+                totalItems: count,
+                currentPage: page,
+                pageSize: limit,
+                totalPages: totalPages,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+            },
+            links: {
+                self: `${config.API_BASE_URL}/organizations?page=${page}`,
+                first: `${config.API_BASE_URL}/organizations?page=1`,
+                last: `${config.API_BASE_URL}/organizations?page=${totalPages}`,
+                next: nextLink,
+                previous: previousLink,
+            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
