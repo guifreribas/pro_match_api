@@ -1,9 +1,30 @@
 import Card from "../models/cardModel.js";
+import config from "../config/config.js";
 
 export const getCards = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+
+    const whereConditions = {};
+    if (req.query.card_type) {
+        whereConditions.card_type = req.query.card_type;
+    }
+    if (req.query.minute) {
+        whereConditions.minute = req.query.minute;
+    }
+    if (req.query.part) {
+        whereConditions.part = req.query.part;
+    }
+    if (req.query.match_id) {
+        whereConditions.match_id = req.query.match_id;
+    }
+    if (req.query.player_id) {
+        whereConditions.player_id = req.query.player_id;
+    }
+    if (req.query.team_id) {
+        whereConditions.team_id = req.query.team_id;
+    }
 
     try {
         const { count, rows } = await Card.findAndCountAll({
