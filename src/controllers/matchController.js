@@ -1,12 +1,68 @@
 import Match from "../models/matchModel.js";
+import config from "../config/config.js";
 
 export const getMatches = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const whereConditions = {};
+    if (req.query.status) {
+        whereConditions.status = req.query.status;
+    }
+    if (req.query.category_id) {
+        whereConditions.category_id = req.query.category_id;
+    }
+    if (req.query.local_team) {
+        whereConditions.local_team = req.query.local_team;
+    }
+    if (req.query.visitor_team) {
+        whereConditions.visitor_team = req.query.visitor_team;
+    }
+    if (req.query.date) {
+        whereConditions.date = req.query.date;
+    }
     try {
-        const matches = await Match.findAll();
+        const { count, rows } = await Match.findAndCountAll({
+            where: whereConditions,
+            offset,
+            limit,
+        });
+        const totalPages = Math.ceil(count / limit);
+        const previousLink =
+            page > 1 ? `${config.API_BASE_URL}/matches?page=${page - 1}` : null;
+        const nextLink =
+            page < totalPages
+                ? `${config.API_BASE_URL}/matches?page=${page + 1}`
+                : null;
+
         res.status(200).json({
             success: true,
             message: "Matches fetched successfully",
-            data: matches,
+            data: {
+                items: rows.map((match) => ({
+                    id_match: match.id_match,
+                    status: match.status,
+                    category_id: match.category_id,
+                    local_team: match.local_team,
+                    visitor_team: match.visitor_team,
+                    date: match.date,
+                })),
+                itemCount: rows.length,
+                totalItems: count,
+                currentPage: page,
+                pageSize: limit,
+                totalPages: totalPages,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+            },
+            links: {
+                self: `${config.API_BASE_URL}/matches?page=${page}`,
+                first: `${config.API_BASE_URL}/matches?page=1`,
+                last: `${config.API_BASE_URL}/matches?page=${totalPages}`,
+                next: nextLink,
+                previous: previousLink,
+            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
