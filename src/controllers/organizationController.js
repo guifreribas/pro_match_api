@@ -1,3 +1,5 @@
+import Organization from "../models/organizationModel.js";
+
 export const getOrganizations = async (req, res) => {
     try {
         const organizations = await Organization.findAll();
@@ -8,6 +10,7 @@ export const getOrganizations = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get organizations" });
     }
 };

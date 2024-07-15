@@ -1,3 +1,5 @@
+import Category from "../models/categoryModel.js";
+
 export const getCategories = async (req, res) => {
     try {
         const categories = await Category.findAll();
@@ -8,6 +10,7 @@ export const getCategories = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get categories" });
     }
 };

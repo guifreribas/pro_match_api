@@ -1,3 +1,5 @@
+import TeamPlayer from "../models/teamPlayerModel.js";
+
 export const getTeamPlayers = async (req, res) => {
     try {
         const teamPlayers = await TeamPlayer.findAll();

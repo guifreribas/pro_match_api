@@ -1,3 +1,5 @@
+import Result from "../models/resultModel.js";
+
 export const getResults = async (req, res) => {
     try {
         const results = await Result.findAll();
@@ -8,6 +10,7 @@ export const getResults = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get results" });
     }
 };

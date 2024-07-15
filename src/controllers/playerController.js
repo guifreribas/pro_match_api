@@ -1,3 +1,5 @@
+import Player from "../models/playerModel.js";
+
 export const getPlayers = async (req, res) => {
     try {
         const players = await Player.findAll();

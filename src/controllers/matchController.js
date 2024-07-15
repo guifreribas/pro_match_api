@@ -1,3 +1,5 @@
+import Match from "../models/matchModel.js";
+
 export const getMatches = async (req, res) => {
     try {
         const matches = await Match.findAll();
@@ -8,7 +10,8 @@ export const getMatches = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to get matches" });
+        console.log(error);
+        res.status(500).json({ error: "Error to get matches", error });
     }
 };
 

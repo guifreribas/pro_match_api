@@ -1,3 +1,5 @@
+import Foul from "../models/foulModel.js";
+
 export const getFouls = async (req, res) => {
     try {
         const fouls = await Foul.findAll();
@@ -8,6 +10,7 @@ export const getFouls = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get fouls" });
     }
 };

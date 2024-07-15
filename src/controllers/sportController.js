@@ -1,3 +1,5 @@
+import Sport from "../models/sportModel.js";
+
 export const getSports = async (req, res) => {
     try {
         const sports = await Sport.findAll();

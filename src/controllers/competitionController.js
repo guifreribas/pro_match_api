@@ -1,3 +1,5 @@
+import Competition from "../models/competitionModel.js";
+
 export const getCompetitions = async (req, res) => {
     try {
         const competitions = await Competition.findAll();
@@ -8,6 +10,7 @@ export const getCompetitions = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get competitions" });
     }
 };

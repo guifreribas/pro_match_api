@@ -1,6 +1,10 @@
+import config from "../config/config.js";
+import Goal from "../models/goalModel.js";
+
 export const getGoals = async (req, res) => {
     try {
         const goals = await Goal.findAll();
+        console.log({ goals });
         res.status(200).json({
             success: true,
             message: "Goals fetched successfully",

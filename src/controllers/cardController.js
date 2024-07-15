@@ -1,6 +1,17 @@
+import Card from "../models/cardModel.js";
+
 export const getCards = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
     try {
+        const { count, rows } = await Card.findAndCountAll({
+            offset,
+            limit,
+        });
         const cards = await Card.findAll();
+        console.log({ count, rows });
         res.status(200).json({
             success: true,
             message: "Cards fetched successfully",
@@ -8,7 +19,8 @@ export const getCards = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to get cards" });
+        console.log(error);
+        res.status(500).json({ error: "Error to get cards", error });
     }
 };
 
