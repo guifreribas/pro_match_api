@@ -1,8 +1,10 @@
 import { Router } from "express";
 import {
     createUser,
+    deleteUser,
     getUser,
     getUsers,
+    updateUser,
 } from "../controllers/userController.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 
@@ -14,8 +16,12 @@ router.get(
     authenticateToken(["ADMIN", "SUPER_ADMIN", "USER"]),
     getUser
 );
-router.post("/", createUser);
-router.put("/:id", (req, res) => res.send("Users"));
-router.delete("/:id", (req, res) => res.send("Delete"));
+router.post("/", authenticateToken(["ADMIN", "SUPER_ADMIN"]), createUser);
+router.put(
+    "/:id",
+    authenticateToken(["ADMIN", "SUPER_ADMIN", "USER"]),
+    updateUser
+);
+router.delete("/:id", authenticateToken(["ADMIN", "SUPER_ADMIN"]), deleteUser);
 
 export default router;

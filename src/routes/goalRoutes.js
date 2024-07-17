@@ -7,13 +7,15 @@ import {
     getGoal,
     updateGoal,
 } from "../controllers/goalController.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
 
 const router = Router();
+const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
-router.get("/", getGoals);
-router.get("/:id", getGoal);
-router.post("/", createGoal);
-router.put("/:id", updateGoal);
-router.delete("/:id", deleteGoal);
+router.get("/", authenticateToken(allRoles), getGoals);
+router.get("/:id", authenticateToken(allRoles), getGoal);
+router.post("/", authenticateToken(allRoles), createGoal);
+router.put("/:id", authenticateToken(allRoles), updateGoal);
+router.delete("/:id", authenticateToken(allRoles), deleteGoal);
 
 export default router;

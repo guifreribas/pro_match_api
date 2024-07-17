@@ -6,13 +6,15 @@ import {
     getResults,
     updateResult,
 } from "../controllers/resultController.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
 
 const router = Router();
+const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
-router.get("/", getResults);
-router.post("/", createResult);
-router.get("/:id", getResult);
-router.put("/:id", updateResult);
-router.delete("/:id", deleteResult);
+router.get("/", authenticateToken(allRoles), getResults);
+router.post("/", authenticateToken(allRoles), createResult);
+router.get("/:id", authenticateToken(allRoles), getResult);
+router.put("/:id", authenticateToken(allRoles), updateResult);
+router.delete("/:id", authenticateToken(allRoles), deleteResult);
 
 export default router;

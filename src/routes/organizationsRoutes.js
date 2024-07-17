@@ -6,13 +6,15 @@ import {
     getOrganizations,
     updateOrganization,
 } from "../controllers/organizationController.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
 
 const router = Router();
+const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
-router.get("/", getOrganizations);
-router.get("/:id", getOrganization);
-router.post("/", createOrganization);
-router.put("/:id", updateOrganization);
-router.delete("/:id", deleteOrganization);
+router.get("/", authenticateToken(allRoles), getOrganizations);
+router.get("/:id", authenticateToken(allRoles), getOrganization);
+router.post("/", authenticateToken(allRoles), createOrganization);
+router.put("/:id", authenticateToken(allRoles), updateOrganization);
+router.delete("/:id", authenticateToken(allRoles), deleteOrganization);
 
 export default router;

@@ -3,8 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
 export const authenticateToken = (allowedRoles) => async (req, res, next) => {
-    next();
-    return;
     try {
         const { cookies } = req;
         const accessToken = cookies.token;
@@ -27,9 +25,7 @@ export const authenticateToken = (allowedRoles) => async (req, res, next) => {
             });
         }
 
-        const hasPermission = user.roles.some((role) =>
-            allowedRoles.includes(role)
-        );
+        const hasPermission = allowedRoles.includes(user.role);
         if (!hasPermission) {
             return res.status(403).json({
                 code: 403,
