@@ -20,6 +20,7 @@ const config = {
         api_key: process.env.CLOUDINARY_API_KEY,
         api_secret: process.env.CLOUDINARY_API_SECRET,
         image_url: process.env.CLOUDINARY_IMAGE_URL,
+        url: process.env.CLOUDINARY_URL,
     },
 };
 
