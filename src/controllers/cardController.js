@@ -32,7 +32,6 @@ export const getCards = async (req, res) => {
             limit,
         });
         const cards = await Card.findAll();
-        console.log({ count, rows });
         res.status(200).json({
             success: true,
             message: "Cards fetched successfully",

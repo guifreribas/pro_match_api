@@ -123,10 +123,8 @@ export const getUser = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-    console.log({ body: req.body });
     try {
         const user = await User.create(req.body);
-        console.log({ user });
         res.status(201).json({
             success: true,
             message: "User created successfully",

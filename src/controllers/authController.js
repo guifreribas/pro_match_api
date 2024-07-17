@@ -19,7 +19,6 @@ export async function register(req, res) {
 
         const { name, last_name, email, password, role, birthday } = req.body;
         const isEmailExist = await User.findOne({ where: { email } });
-        console.log({ isEmailExist });
         if (isEmailExist) {
             return res.status(400).json({
                 code: 400,
@@ -56,7 +55,6 @@ export async function register(req, res) {
         });
 
         res.setHeader("Set-Cookie", token);
-        console.log({ user, accessToken });
         res.status(201).json({
             code: 201,
             success: true,
@@ -79,7 +77,6 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    console.log(req.body);
     try {
         const errors = validationResult(req);
 
