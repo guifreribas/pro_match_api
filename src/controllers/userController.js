@@ -93,7 +93,13 @@ export const getUsers = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: "Error to get users" });
+        res.status(500).json({
+            success: false,
+            message: "Error to get users",
+            data: null,
+            links: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -111,14 +117,17 @@ export const getUser = async (req, res) => {
             res.status(404).json({
                 success: false,
                 message: "User not found",
-                data: {
-                    id_user: req.params.id,
-                },
+                data: null,
                 timestamp: new Date().toISOString(),
             });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error to get user" });
+        res.status(500).json({
+            success: false,
+            message: "Error to get user",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -129,13 +138,15 @@ export const createUser = async (req, res) => {
             success: true,
             message: "User created successfully",
             data: user,
-            links: {
-                self: `${config.API_BASE_URL}/users/${user.id_user}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to create user" });
+        res.status(500).json({
+            success: false,
+            message: "Error to create user",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -148,13 +159,15 @@ export const updateUser = async (req, res) => {
             success: true,
             message: "User updated successfully",
             data: user,
-            links: {
-                self: `${config.API_BASE_URL}/users/${user.id_user}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to update user" });
+        res.status(500).json({
+            success: false,
+            message: "Error to update user",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -167,22 +180,20 @@ export const deleteUser = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: "User deleted successfully",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         } else {
             res.status(404).json({
                 success: false,
                 message: "User not found",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error to delete user" });
+        res.status(500).json({
+            success: false,
+            message: "Error to delete user",
+            timestamp: new Date().toISOString(),
+        });
     }
 };
