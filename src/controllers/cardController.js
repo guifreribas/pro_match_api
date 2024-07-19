@@ -31,16 +31,53 @@ export const getCards = async (req, res) => {
             offset,
             limit,
         });
-        const cards = await Card.findAll();
+        const totalPages = Math.ceil(count / limit);
+        const previousLink =
+            page > 1 ? `${config.API_BASE_URL}/cards?page=${page - 1}` : null;
+        const nextLink =
+            page < totalPages
+                ? `${config.API_BASE_URL}/cards?page=${page + 1}`
+                : null;
+
         res.status(200).json({
-            success: true,
+            status: "success",
             message: "Cards fetched successfully",
-            data: cards,
+            data: {
+                items: rows.map((card) => ({
+                    id_card: card.id_card,
+                    card_type: card.card_type,
+                    minute: card.minute,
+                    part: card.part,
+                    match_id: card.match_id,
+                    player_id: card.player_id,
+                    team_id: card.team_id,
+                })),
+                itemCount: rows.length,
+                totalItems: count,
+                currentPage: page,
+                pageSize: limit,
+                totalPages: totalPages,
+                hasNextPage: page < totalPages,
+                hasPreviousPage: page > 1,
+            },
+            links: {
+                self: `${config.API_BASE_URL}/cards?page=${page}`,
+                first: `${config.API_BASE_URL}/cards?page=1`,
+                last: `${config.API_BASE_URL}/cards?page=${totalPages}`,
+                next: nextLink,
+                previous: previousLink,
+            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: "Error to get cards", error });
+        res.status(500).json({
+            success: false,
+            message: "Error to get cards",
+            data: null,
+            links: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -58,14 +95,17 @@ export const getCard = async (req, res) => {
             res.status(404).json({
                 success: false,
                 message: "Card not found",
-                data: {
-                    id_card: req.params.id,
-                },
+                data: null,
                 timestamp: new Date().toISOString(),
             });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error to get card" });
+        res.status(500).json({
+            success: false,
+            message: "Error to get card",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -76,13 +116,15 @@ export const createCard = async (req, res) => {
             success: true,
             message: "Card created successfully",
             data: card,
-            links: {
-                self: `${config.API_BASE_URL}/cards/${card.id_card}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to create card" });
+        res.status(500).json({
+            success: false,
+            message: "Error to create card",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -95,13 +137,15 @@ export const updateCard = async (req, res) => {
             success: true,
             message: "Card updated successfully",
             data: card,
-            links: {
-                self: `${config.API_BASE_URL}/cards/${card.id_card}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to update card" });
+        res.status(500).json({
+            success: false,
+            message: "Error to update card",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
 
@@ -114,22 +158,21 @@ export const deleteCard = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: "Card deleted successfully",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         } else {
             res.status(404).json({
                 success: false,
                 message: "Card not found",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error to delete card" });
+        res.status(500).json({
+            success: false,
+            message: "Error to delete card",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
     }
 };
