@@ -6,6 +6,7 @@ import {
     getCategory,
     updateCategory,
 } from "../controllers/categoryController.js";
+import { authenticateToken } from "../middlewares/authenticateToken.js";
 
 const router = Router();
 const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
