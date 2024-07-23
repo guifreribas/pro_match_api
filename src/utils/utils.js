@@ -8,3 +8,8 @@ export function extractFileName(path) {
     const regex = /[^\/]+$/;
     return path.match(regex)[0];
 }
+
+export function getTokenFromCookie(cookie) {
+    const match = cookie.match(/token=([^;]+)/);
+    return match ? match[1] : null;
+}
