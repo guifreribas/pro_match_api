@@ -1,6 +1,56 @@
 import { Op } from "sequelize";
 import config from "../config/config.js";
 import User from "../models/userModel.js";
+import { getTokenFromCookie } from "../utils/utils.js";
+import jwt from "jsonwebtoken";
+
+export const getMe = async (req, res) => {
+    const cookies = await req.headers.cookie;
+    const token = getTokenFromCookie(cookies);
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            message: "No token provided",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
+    }
+    const decoded = jwt.decode(token);
+    if (!decoded.id_user) {
+        return res.status(401).json({
+            success: false,
+            message: "Invalid token",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
+    }
+
+    try {
+        const user = await User.findByPk(decoded.id_user);
+        if (user) {
+            res.status(200).json({
+                success: true,
+                message: "User fetched successfully",
+                data: user,
+                timestamp: new Date().toISOString(),
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: "User not found",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error to get user",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
+    }
+};
 
 export const getUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
