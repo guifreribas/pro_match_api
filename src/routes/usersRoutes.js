@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
     createUser,
     deleteUser,
+    getMe,
     getUser,
     getUsers,
     updateUser,
@@ -10,6 +11,7 @@ import { authenticateToken } from "../middlewares/authenticateToken.js";
 
 const router = Router();
 
+router.get("/me", authenticateToken(["ADMIN", "SUPER_ADMIN", "USER"]), getMe);
 router.get("/", authenticateToken(["ADMIN", "SUPER_ADMIN", "USER"]), getUsers);
 router.get(
     "/:id",
