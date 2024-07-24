@@ -89,10 +89,12 @@ export async function login(req, res) {
         const { email, password, remember } = req.body;
 
         // Verificar si el correo electrónico y la contraseña son correctos
-        const user = await User.findOne({ where: { email } });
+        const user = await User.scope("withPassword").findOne({
+            where: { email },
+        });
         if (!user) {
             return res.status(401).json({
-                code: -25,
+                code: 401,
                 message: "user No exist",
             });
         }
@@ -114,7 +116,7 @@ export async function login(req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: remember ? 60 * 60 * 24 * 30 : 0,
+            maxAge: remember ? 60 * 60 * 24 * 30 * 1000 : 60 * 60 * 24 * 30,
             path: "/",
         });
         res.setHeader("Set-Cookie", token);
@@ -125,10 +127,13 @@ export async function login(req, res) {
             message: "Login OK",
             data: {
                 user: {
+                    id_user: user.id_user,
                     name: user.name,
                     last_name: user.last_name,
                     email: user.email,
                     avatar: user.avatar,
+                    role: user.role,
+                    birthday: user.birthday,
                 },
             },
         });
