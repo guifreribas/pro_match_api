@@ -1,9 +1,10 @@
-import { validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import { serialize } from "cookie";
+import { getTokenFromCookie } from "../utils/utils.js";
 
 export async function register(req, res) {
     try {
@@ -85,7 +86,7 @@ export async function login(req, res) {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { email, password } = req.body;
+        const { email, password, remember } = req.body;
 
         // Verificar si el correo electrónico y la contraseña son correctos
         const user = await User.findOne({ where: { email } });
@@ -99,8 +100,8 @@ export async function login(req, res) {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
-                code: -5,
-                message: "Credenciales incorrectas",
+                code: 401,
+                message: "Password o email incorrectos",
             });
         }
 
@@ -113,7 +114,7 @@ export async function login(req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 60 * 60 * 24 * 30,
+            maxAge: remember ? 60 * 60 * 24 * 30 : 0,
             path: "/",
         });
         res.setHeader("Set-Cookie", token);
@@ -141,8 +142,26 @@ export async function login(req, res) {
     }
 }
 
-export function logout(req, res) {
-    res.send("Logout");
+export async function logout(req, res) {
+    const accessToken = jwt.sign(
+        { id_user: null, name: null },
+        process.env.JWT_SECRET
+    );
+
+    const token = serialize("token", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 0,
+        path: "/",
+    });
+    res.setHeader("Set-Cookie", token);
+
+    res.status(200).json({
+        code: 200,
+        success: true,
+        message: "Logout OK",
+    });
 }
 
 export function forgotPassword(req, res) {
@@ -151,4 +170,13 @@ export function forgotPassword(req, res) {
 
 export function resetPassword(req, res) {
     res.send("Reset Password");
+}
+
+export async function checkToken(req, res) {
+    const cookies = await req.headers.cookie;
+    if (!cookies) res.send(false);
+    const accessToken = getTokenFromCookie(cookies);
+    if (!accessToken) res.send(false);
+    const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET);
+    res.send(!!decodedToken.id_user);
 }
