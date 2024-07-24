@@ -50,6 +50,17 @@ const User = sequelize.define(
         timestamps: true,
         createdAt: "created_at",
         updatedAt: "updated_at",
+        defaultScope: {
+            attributes: { exclude: ["password"] },
+        },
+        scopes: {
+            withPassword: {
+                attributes: {},
+            },
+        },
+        defaultScope: {
+            attributes: { exclude: ["password"] },
+        },
     }
 );
 
