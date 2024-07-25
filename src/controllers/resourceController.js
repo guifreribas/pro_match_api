@@ -114,7 +114,6 @@ export const createResource = async (req, res) => {
             name: publicId,
             type,
         });
-        console.log({ resource });
 
         res.status(200).json({
             success: true,
