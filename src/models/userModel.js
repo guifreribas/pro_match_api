@@ -39,6 +39,11 @@ const User = sequelize.define(
             type: DataTypes.ENUM("SUPER_ADMIN", "ADMIN", "USER", "REFEREE"),
             allowNull: false,
         },
+        has_organization: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false,
+        },
     },
     {
         indexes: [
