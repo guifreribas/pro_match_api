@@ -16,7 +16,6 @@ import organizationsRouter from "../src/routes/organizationsRoutes.js";
 import playersRouter from "../src/routes/playersRoutes.js";
 import resourcesRouter from "./routes/resourcesRoutes.js";
 import resultsRouter from "../src/routes/resultsRoutes.js";
-import sportsRouter from "../src/routes/sportsRoutes.js";
 import teamsRouter from "../src/routes/teamsRoutes.js";
 import usersRouter from "../src/routes/usersRoutes.js";
 
@@ -44,7 +43,6 @@ app.use("/api/organizations", organizationsRouter);
 app.use("/api/players", playersRouter);
 app.use("/api/resources", resourcesRouter);
 app.use("/api/results", resultsRouter);
-app.use("/api/sports", sportsRouter);
 app.use("/api/teams", teamsRouter);
 app.use("/api/users", usersRouter);
 
