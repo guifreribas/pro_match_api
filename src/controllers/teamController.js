@@ -13,9 +13,6 @@ export const getTeams = async (req, res) => {
     if (req.query.avatar) {
         whereConditions.avatar = req.query.avatar;
     }
-    if (req.query.sport_id) {
-        whereConditions.sport_id = req.query.sport_id;
-    }
     try {
         const { count, rows } = await Team.findAndCountAll({
             where: whereConditions,
@@ -38,7 +35,6 @@ export const getTeams = async (req, res) => {
                     id_team: team.id_team,
                     name: team.name,
                     avatar: team.avatar,
-                    sport_id: team.sport_id,
                 })),
                 itemCount: rows.length,
                 totalItems: count,

@@ -16,9 +16,6 @@ export const getOrganizations = async (req, res) => {
     if (req.query.competition_id) {
         whereConditions.competition_id = req.query.competition_id;
     }
-    if (req.query.sport_id) {
-        whereConditions.sport_id = req.query.sport_id;
-    }
     if (req.query.user_id) {
         whereConditions.user_id = req.query.user_id;
     }
@@ -48,7 +45,6 @@ export const getOrganizations = async (req, res) => {
                     name: organization.name,
                     logo: organization.logo,
                     competition_id: organization.competition_id,
-                    sport_id: organization.sport_id,
                     user_id: organization.user_id,
                 })),
                 itemCount: rows.length,
