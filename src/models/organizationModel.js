@@ -2,7 +2,6 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
 import Competition from "./competitionModel.js";
-import Sport from "./sportModel.js";
 import User from "./userModel.js";
 
 const Organization = sequelize.define(
@@ -26,10 +25,6 @@ const Organization = sequelize.define(
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
         },
-        sport_id: {
-            type: DataTypes.INTEGER(10).UNSIGNED,
-            allowNull: false,
-        },
         user_id: {
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
@@ -43,7 +38,6 @@ const Organization = sequelize.define(
 );
 
 Organization.belongsTo(Competition, { foreignKey: "competition_id" });
-Organization.belongsTo(Sport, { foreignKey: "sport_id" });
 Organization.belongsTo(User, { foreignKey: "user_id" });
 
 export default Organization;

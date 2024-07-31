@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Sport from "./sportModel.js";
 
 const Team = sequelize.define(
     "team",
@@ -19,10 +18,6 @@ const Team = sequelize.define(
             defaultValue: null,
             allowNull: true,
         },
-        sport_id: {
-            type: DataTypes.INTEGER(10).UNSIGNED,
-            allowNull: false,
-        },
     },
     {
         indexes: [],
@@ -31,7 +26,5 @@ const Team = sequelize.define(
         createdAt: "created_at",
     }
 );
-
-Team.belongsTo(Sport, { foreignKey: "sport_id" });
 
 export default Team;
