@@ -98,7 +98,7 @@ export const getResource = async (req, res) => {
 };
 
 export const createResource = async (req, res) => {
-    if (!req.body.type) {
+    if (!req.file.fieldname) {
         return res.status(400).json({
             success: false,
             message: "Error to create resource",
@@ -106,9 +106,8 @@ export const createResource = async (req, res) => {
         });
     }
     try {
-        const imageUrl = req.file.path;
         const publicId = extractFileName(req.file.path);
-        const type = req.body.type || "IMAGE";
+        const type = req.file.mimetype.startsWith("image/") ? "IMAGE" : "VIDEO";
 
         const resource = await Resource.create({
             name: publicId,

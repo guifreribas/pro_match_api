@@ -17,7 +17,7 @@ router.get("/:id", authenticateToken(allRoles), getResource);
 router.post(
     "/",
     authenticateToken(allRoles),
-    parser.single("image"),
+    parser.single("file"),
     createResource
 );
 router.delete(
