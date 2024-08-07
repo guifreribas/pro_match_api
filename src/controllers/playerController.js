@@ -86,6 +86,7 @@ export const getPlayers = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Error to get players" });
     }
 };
@@ -116,8 +117,12 @@ export const getPlayer = async (req, res) => {
 };
 
 export const createPlayer = async (req, res) => {
+    const body = {
+        ...req.body,
+        last_name: req.body.lastName,
+    };
     try {
-        const player = await Player.create(req.body);
+        const player = await Player.create(body);
         res.status(201).json({
             success: true,
             message: "Player created successfully",
@@ -128,7 +133,8 @@ export const createPlayer = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to create player" });
+        console.log(error);
+        res.status(500).json({ error: "Error to create player", error });
     }
 };
 
