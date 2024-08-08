@@ -30,6 +30,10 @@ const Player = sequelize.define(
             type: DataTypes.DATE,
             allowNull: true,
         },
+        user_id: {
+            type: DataTypes.INTEGER(10).UNSIGNED,
+            allowNull: false,
+        },
     },
     {
         timestamps: true,
@@ -37,5 +41,7 @@ const Player = sequelize.define(
         createdAt: "created_at",
     }
 );
+
+Player.belongsTo(User, { foreignKey: "user_id" });
 
 export default Player;
