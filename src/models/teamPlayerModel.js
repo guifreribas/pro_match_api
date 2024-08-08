@@ -6,7 +6,7 @@ import Team from "./teamModel.js";
 const TeamPlayer = sequelize.define(
     "team_player",
     {
-        team_player_id: {
+        id_team_player: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
