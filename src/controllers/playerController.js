@@ -127,9 +127,6 @@ export const createPlayer = async (req, res) => {
             success: true,
             message: "Player created successfully",
             data: player,
-            links: {
-                self: `${config.API_BASE_URL}/players/${player.id_player}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -148,9 +145,6 @@ export const updatePlayer = async (req, res) => {
             status: "success",
             message: "Player updated successfully",
             data: player,
-            links: {
-                self: `${config.API_BASE_URL}/players/${player.id_player}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -167,9 +161,6 @@ export const deletePlayer = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: "Player deleted successfully",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         } else {
