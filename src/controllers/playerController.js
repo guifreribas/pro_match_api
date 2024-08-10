@@ -6,7 +6,9 @@ export const getPlayers = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
-    const whereConditions = {};
+    const whereConditions = {
+        user_id: req.user.id_user,
+    };
     if (req.query.name) {
         whereConditions.name = req.query.name;
     }
@@ -42,6 +44,7 @@ export const getPlayers = async (req, res) => {
             [Op.eq]: new Date(req.query.birthdayEqual),
         };
     }
+
     try {
         const { count, rows } = await Player.findAndCountAll({
             where: whereConditions,
@@ -87,13 +90,21 @@ export const getPlayers = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: "Error to get players" });
+        res.status(500).json({ error: "Error to get players", error });
     }
 };
 
 export const getPlayer = async (req, res) => {
     try {
         const player = await Player.findByPk(req.params.id);
+        if (player.user_id !== req.user.id_user) {
+            return res.status(403).json({
+                success: false,
+                message: "You do not have the required permissions.",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
         if (player) {
             res.status(200).json({
                 success: true,
