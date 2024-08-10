@@ -18,6 +18,7 @@ import resourcesRouter from "./routes/resourcesRoutes.js";
 import resultsRouter from "../src/routes/resultsRoutes.js";
 import teamsRouter from "../src/routes/teamsRoutes.js";
 import usersRouter from "../src/routes/usersRoutes.js";
+import fieldsRouter from "../src/routes/fieldsRoutes.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/cards", cardsRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/competition", competitionsRoutes);
 app.use("/api/fouls", foulRouter);
+app.use("/api/fields", fieldsRouter);
 app.use("/api/goals", goalRouter);
 app.use("/api/matches", matchesRouter);
 app.use("/api/organizations", organizationsRouter);
