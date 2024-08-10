@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
+import User from "./userModel.js";
+
 const Player = sequelize.define(
     "player",
     {
