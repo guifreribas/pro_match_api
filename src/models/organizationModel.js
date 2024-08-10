@@ -16,6 +16,10 @@ const Organization = sequelize.define(
             type: DataTypes.STRING(255),
             allowNull: false,
         },
+        address: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         logo: {
             type: DataTypes.STRING(255),
             defaultValue: null,
