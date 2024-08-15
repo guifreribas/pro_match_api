@@ -35,6 +35,7 @@ export const getTeams = async (req, res) => {
                     id_team: team.id_team,
                     name: team.name,
                     avatar: team.avatar,
+                    created_at: team.created_at,
                 })),
                 itemCount: rows.length,
                 totalItems: count,
