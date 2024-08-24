@@ -1,5 +1,7 @@
 import TeamPlayer from "../models/teamPlayerModel.js";
 import config from "../config/config.js";
+import Player from "../models/playerModel.js";
+import Team from "../models/teamModel.js";
 
 export const getTeamPlayers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -9,15 +11,21 @@ export const getTeamPlayers = async (req, res) => {
     const whereConditions = {};
     if (req.query.team_id) {
         whereConditions.team_id = req.query.team_id;
+        include.push({
+            model: Player,
+            attributes: ["name", "last_name", "birthday", "avatar"],
+        });
     }
     if (req.query.player_id) {
         whereConditions.player_id = req.query.player_id;
+        include.push({ model: Team, attributes: ["name", "avatar"] });
     }
     try {
         const { count, rows } = await TeamPlayer.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
+            include,
         });
         const totalPages = Math.ceil(count / limit);
         const previousLink =
@@ -37,6 +45,16 @@ export const getTeamPlayers = async (req, res) => {
                     id_team_player: teamPlayer.id_team_player,
                     team_id: teamPlayer.team_id,
                     player_id: teamPlayer.player_id,
+                    player: {
+                        name: teamPlayer.player.name,
+                        last_name: teamPlayer.player.last_name,
+                        birthday: teamPlayer.player.birthday,
+                        avatar: teamPlayer.player.avatar,
+                    },
+                    team: {
+                        name: teamPlayer.team.name,
+                        avatar: teamPlayer.team.avatar,
+                    },
                 })),
                 itemCount: rows.length,
                 totalItems: count,
