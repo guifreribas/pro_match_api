@@ -1,5 +1,6 @@
 import Player from "../models/playerModel.js";
 import config from "../config/config.js";
+import { Op } from "sequelize";
 
 export const getPlayers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -9,6 +10,9 @@ export const getPlayers = async (req, res) => {
     const whereConditions = {
         user_id: req.user.id_user,
     };
+    if (req.query.q) {
+        whereConditions.name = { [Op.like]: `%${req.query.q}%` };
+    }
     if (req.query.name) {
         whereConditions.name = req.query.name;
     }
