@@ -1,5 +1,6 @@
 import Team from "../models/teamModel.js";
 import config from "../config/config.js";
+import { Op } from "sequelize";
 
 export const getTeams = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -7,6 +8,9 @@ export const getTeams = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const whereConditions = {};
+    if (req.query.q) {
+        whereConditions.name = { [Op.like]: `%${req.query.q}%` };
+    }
     if (req.query.name) {
         whereConditions.name = req.query.name;
     }
