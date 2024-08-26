@@ -59,7 +59,11 @@ export const getTeams = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to get teams" });
+        console.error(error);
+        res.status(500).json({
+            error: "Error to get teams",
+            message: error.message,
+        });
     }
 };
 
