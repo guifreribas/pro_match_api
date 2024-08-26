@@ -9,23 +9,30 @@ export const getTeamPlayers = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const whereConditions = {};
+    if (req.query.user_id) {
+        whereConditions.user_id = req.query.user_id;
+    }
     if (req.query.team_id) {
         whereConditions.team_id = req.query.team_id;
-        include.push({
-            model: Player,
-            attributes: ["name", "last_name", "birthday", "avatar"],
-        });
     }
     if (req.query.player_id) {
         whereConditions.player_id = req.query.player_id;
-        include.push({ model: Team, attributes: ["name", "avatar"] });
     }
     try {
         const { count, rows } = await TeamPlayer.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
-            include,
+            include: [
+                {
+                    model: Player,
+                    attributes: ["name", "last_name", "birthday", "avatar"],
+                },
+                {
+                    model: Team,
+                    attributes: ["name", "avatar"],
+                },
+            ],
         });
         const totalPages = Math.ceil(count / limit);
         const previousLink =
@@ -45,16 +52,20 @@ export const getTeamPlayers = async (req, res) => {
                     id_team_player: teamPlayer.id_team_player,
                     team_id: teamPlayer.team_id,
                     player_id: teamPlayer.player_id,
-                    player: {
-                        name: teamPlayer.player.name,
-                        last_name: teamPlayer.player.last_name,
-                        birthday: teamPlayer.player.birthday,
-                        avatar: teamPlayer.player.avatar,
-                    },
-                    team: {
-                        name: teamPlayer.team.name,
-                        avatar: teamPlayer.team.avatar,
-                    },
+                    player: teamPlayer.player
+                        ? {
+                              name: teamPlayer.player.name,
+                              last_name: teamPlayer.player.last_name,
+                              birthday: teamPlayer.player.birthday,
+                              avatar: teamPlayer.player.avatar,
+                          }
+                        : null,
+                    team: teamPlayer.team
+                        ? {
+                              name: teamPlayer.team.name,
+                              avatar: teamPlayer.team.avatar,
+                          }
+                        : null,
                 })),
                 itemCount: rows.length,
                 totalItems: count,
@@ -74,7 +85,11 @@ export const getTeamPlayers = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to get teamPlayers" });
+        console.error(error);
+        res.status(500).json({
+            error: "Error to get teamPlayers",
+            message: error.message,
+        });
     }
 };
 
@@ -116,7 +131,11 @@ export const createTeamPlayer = async (req, res) => {
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
-        res.status(500).json({ error: "Error to create teamPlayer" });
+        console.error(error);
+        res.status(500).json({
+            error: "Error to create teamPlayer",
+            message: error.message,
+        });
     }
 };
 
