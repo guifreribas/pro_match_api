@@ -125,9 +125,6 @@ export const createTeamPlayer = async (req, res) => {
             success: true,
             message: "TeamPlayer created successfully",
             data: teamPlayer,
-            links: {
-                self: `${config.API_BASE_URL}/teamPlayers/${teamPlayer.id_team_player}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
