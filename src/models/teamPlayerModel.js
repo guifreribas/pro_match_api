@@ -1,26 +1,29 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Player from "./playerModel.js";
-import Team from "./teamModel.js";
 
 const TeamPlayer = sequelize.define(
     "team_player",
     {
         id_team_player: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.INTEGER(10).UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
-        },
-        team_id: {
-            type: DataTypes.INTEGER(10).UNSIGNED,
-            allowNull: false,
         },
         player_id: {
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
         },
+        team_id: {
+            type: DataTypes.INTEGER(10).UNSIGNED,
+            allowNull: false,
+        },
+        user_id: {
+            type: DataTypes.INTEGER(10).UNSIGNED,
+            allowNull: false,
+        },
     },
     {
+        tableName: "teams_players",
         indexes: [
             {
                 unique: true,
@@ -33,7 +36,8 @@ const TeamPlayer = sequelize.define(
     }
 );
 
-TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
-TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
+// TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
+// TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
+// TeamPlayer.belongsTo(User, { foreignKey: "user_id" });
 
 export default TeamPlayer;

@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Match from "./matchModel.js";
 
 const Result = sequelize.define(
     "result",
@@ -30,6 +29,6 @@ const Result = sequelize.define(
     }
 );
 
-Result.belongsTo(Match, { foreignKey: "match_id" });
+// Result.belongsTo(Match, { foreignKey: "match_id" });
 
 export default Result;

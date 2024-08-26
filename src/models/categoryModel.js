@@ -1,8 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Organization from "./organizationModel.js";
-import Competition from "./competitionModel.js";
-import User from "./userModel.js";
 
 const Category = sequelize.define(
     "category",
@@ -36,8 +33,8 @@ const Category = sequelize.define(
     }
 );
 
-Category.belongsTo(Organization, { foreignKey: "organization_id" });
-Category.belongsTo(Competition, { foreignKey: "competition_id" });
-Category.belongsTo(User, { foreignKey: "user_id" });
+// Category.belongsTo(Organization, { foreignKey: "organization_id" });
+// Category.belongsTo(Competition, { foreignKey: "competition_id" });
+// Category.belongsTo(User, { foreignKey: "user_id" });
 
 export default Category;

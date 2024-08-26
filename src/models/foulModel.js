@@ -1,6 +1,3 @@
-import Match from "./matchModel.js";
-import Player from "./playerModel.js";
-import Team from "./teamModel.js";
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
@@ -46,8 +43,8 @@ const Foul = sequelize.define(
     }
 );
 
-Foul.belongsTo(Match, { foreignKey: "match_id" });
-Foul.belongsTo(Player, { foreignKey: "player_id" });
-Foul.belongsTo(Team, { foreignKey: "team_id" });
+// Foul.belongsTo(Match, { foreignKey: "match_id" });
+// Foul.belongsTo(Player, { foreignKey: "player_id" });
+// Foul.belongsTo(Team, { foreignKey: "team_id" });
 
 export default Foul;

@@ -1,7 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Category from "./categoryModel.js";
-import Team from "./teamModel.js";
 
 const Match = sequelize.define(
     "match",
@@ -48,8 +46,8 @@ const Match = sequelize.define(
     }
 );
 
-Match.belongsTo(Category, { foreignKey: "category_id" });
-Match.belongsTo(Team, { foreignKey: "local_team" });
-Match.belongsTo(Team, { foreignKey: "visitor_team" });
+// Match.belongsTo(Category, { foreignKey: "category_id" });
+// Match.belongsTo(Team, { foreignKey: "local_team" });
+// Match.belongsTo(Team, { foreignKey: "visitor_team" });
 
 export default Match;

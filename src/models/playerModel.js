@@ -1,8 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
-import User from "./userModel.js";
-
 const Player = sequelize.define(
     "player",
     {
@@ -44,6 +42,7 @@ const Player = sequelize.define(
     }
 );
 
-Player.belongsTo(User, { foreignKey: "user_id" });
+// Player.belongsTo(User, { foreignKey: "user_id" });
+// Player.hasMany(TeamPlayer, { foreignKey: "player_id" });
 
 export default Player;

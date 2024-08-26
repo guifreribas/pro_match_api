@@ -1,9 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
 
-import Competition from "./competitionModel.js";
-import User from "./userModel.js";
-
 const Organization = sequelize.define(
     "organization",
     {
@@ -41,7 +38,7 @@ const Organization = sequelize.define(
     }
 );
 
-Organization.belongsTo(Competition, { foreignKey: "competition_id" });
-Organization.belongsTo(User, { foreignKey: "user_id" });
+// Organization.belongsTo(Competition, { foreignKey: "competition_id" });
+// Organization.belongsTo(User, { foreignKey: "user_id" });
 
 export default Organization;

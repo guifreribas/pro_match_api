@@ -1,8 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
-import Organization from "./organizationModel.js";
-import Competition from "./competitionModel.js";
-import User from "./userModel.js";
 
 const Field = sequelize.define(
     "field",
@@ -40,8 +37,8 @@ const Field = sequelize.define(
     }
 );
 
-Field.belongsTo(Organization, { foreignKey: "organization_id" });
-Field.belongsTo(Competition, { foreignKey: "competition_id" });
-Field.belongsTo(User, { foreignKey: "user_id" });
+// Field.belongsTo(Organization, { foreignKey: "organization_id" });
+// Field.belongsTo(Competition, { foreignKey: "competition_id" });
+// Field.belongsTo(User, { foreignKey: "user_id" });
 
 export default Field;
