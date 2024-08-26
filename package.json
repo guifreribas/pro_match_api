@@ -4,6 +4,15 @@
     "description": "API REST for Pro Match",
     "main": "src/index.js",
     "type": "module",
+    "imports": {
+        "#src/*": "./src/*",
+        "#config/*": "./src/config/*",
+        "#middlewares/*": "./src/middlewares/*",
+        "#models/*": "./src/models/*",
+        "#controllers/*": "./src/controllers/*",
+        "#routes/*": "./src/routes/*",
+        "#utils/*": "./src/utils/*"
+    },
     "scripts": {
         "dev": "nodemon src/index.js",
         "start": "node src/index.js"
