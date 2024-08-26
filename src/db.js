@@ -5,14 +5,10 @@ import config from "./config/config.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
-    // config.database.database,
-    // config.database.username,
-    // config.database.password,
     process.env.DATABASE,
     process.env.USER_NAME,
     process.env.PASSWORD,
     {
-        // host: config.database.host,
         host: process.env.HOST_NAME,
         dialect: "mysql",
     }
