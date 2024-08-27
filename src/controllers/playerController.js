@@ -11,7 +11,11 @@ export const getPlayers = async (req, res) => {
         user_id: req.user.id_user,
     };
     if (req.query.q) {
-        whereConditions.name = { [Op.like]: `%${req.query.q}%` };
+        whereConditions[Op.or] = [
+            { name: { [Op.like]: `%${req.query.q}%` } },
+            { last_name: { [Op.like]: `%${req.query.q}%` } },
+            { dni: { [Op.like]: `%${req.query.q}%` } },
+        ];
     }
     if (req.query.name) {
         whereConditions.name = req.query.name;
