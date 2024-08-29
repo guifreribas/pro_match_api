@@ -17,6 +17,9 @@ export const getTeams = async (req, res) => {
     if (req.query.avatar) {
         whereConditions.avatar = req.query.avatar;
     }
+    if (req.query.user_id) {
+        whereConditions.user_id = req.query.user_id;
+    }
     try {
         const { count, rows } = await Team.findAndCountAll({
             where: whereConditions,
