@@ -128,10 +128,33 @@ export const getTeamPlayer = async (req, res) => {
 export const createTeamPlayer = async (req, res) => {
     try {
         const teamPlayer = await TeamPlayer.create(req.body);
+
+        const player = await Player.findByPk(req.body.player_id);
+        const team = await Team.findByPk(req.body.team_id);
+        const teamPlayerResponse = {
+            id_team_player: teamPlayer.id_team_player,
+            team_id: teamPlayer.team_id,
+            player_id: teamPlayer.player_id,
+            player: player
+                ? {
+                      name: player.name,
+                      last_name: player.last_name,
+                      birthday: player.birthday,
+                      avatar: player.avatar,
+                      dni: player.dni,
+                  }
+                : null,
+            team: team
+                ? {
+                      name: team.name,
+                      avatar: team.avatar,
+                  }
+                : null,
+        };
         res.status(201).json({
             success: true,
             message: "TeamPlayer created successfully",
-            data: teamPlayer,
+            data: teamPlayerResponse,
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
