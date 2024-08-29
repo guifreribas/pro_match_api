@@ -26,7 +26,13 @@ export const getTeamPlayers = async (req, res) => {
             include: [
                 {
                     model: Player,
-                    attributes: ["name", "last_name", "birthday", "avatar"],
+                    attributes: [
+                        "name",
+                        "last_name",
+                        "birthday",
+                        "avatar",
+                        "dni",
+                    ],
                 },
                 {
                     model: Team,
