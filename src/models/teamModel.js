@@ -18,9 +18,18 @@ const Team = sequelize.define(
             defaultValue: null,
             allowNull: true,
         },
+        user_id: {
+            type: DataTypes.INTEGER(10).UNSIGNED,
+            allowNull: false,
+        },
     },
     {
-        indexes: [],
+        indexes: [
+            {
+                unique: true,
+                fields: ["name"],
+            },
+        ],
         timestamps: true,
         updatedAt: "updated_at",
         createdAt: "created_at",

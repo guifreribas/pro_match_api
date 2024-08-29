@@ -62,6 +62,7 @@ export function setupAssociations() {
     // Team.belongsTo(Category, { foreignKey: "category_id" });
     // Team.belongsTo(Organization, { foreignKey: "organization_id" });
     Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
+    Team.belongsTo(User, { foreignKey: "user_id" });
 
     TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
     TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
@@ -70,4 +71,5 @@ export function setupAssociations() {
     User.hasMany(Category, { foreignKey: "user_id" });
     User.hasMany(Organization, { foreignKey: "user_id" });
     User.hasMany(Player, { foreignKey: "user_id" });
+    User.hasMany(Team, { foreignKey: "user_id" });
 }

@@ -39,6 +39,7 @@ export const getTeams = async (req, res) => {
                     id_team: team.id_team,
                     name: team.name,
                     avatar: team.avatar,
+                    user_id: team.user_id,
                     created_at: team.created_at,
                 })),
                 itemCount: rows.length,
@@ -99,9 +100,6 @@ export const createTeam = async (req, res) => {
             success: true,
             message: "Team created successfully",
             data: team,
-            links: {
-                self: `${config.API_BASE_URL}/teams/${team.id_team}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -119,9 +117,6 @@ export const updateTeam = async (req, res) => {
             status: "success",
             message: "Team updated successfully",
             data: team,
-            links: {
-                self: `${config.API_BASE_URL}/teams/${team.id_team}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -138,18 +133,12 @@ export const deleteTeam = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: "Team deleted successfully",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         } else {
             res.status(404).json({
                 success: false,
                 message: "Team not found",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         }
