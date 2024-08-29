@@ -64,6 +64,7 @@ export const getTeamPlayers = async (req, res) => {
                               last_name: teamPlayer.player.last_name,
                               birthday: teamPlayer.player.birthday,
                               avatar: teamPlayer.player.avatar,
+                              dni: teamPlayer.player.dni,
                           }
                         : null,
                     team: teamPlayer.team
