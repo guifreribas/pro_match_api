@@ -21,6 +21,10 @@ const TeamPlayer = sequelize.define(
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
         },
+        player_number: {
+            type: DataTypes.INTEGER(2),
+            allowNull: false,
+        },
     },
     {
         tableName: "teams_players",
