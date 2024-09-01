@@ -2,6 +2,7 @@ import TeamPlayer from "../models/teamPlayerModel.js";
 import config from "../config/config.js";
 import Player from "../models/playerModel.js";
 import Team from "../models/teamModel.js";
+import { sequelize } from "#src/db.js";
 
 export const getTeamPlayers = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -18,11 +19,14 @@ export const getTeamPlayers = async (req, res) => {
     if (req.query.player_id) {
         whereConditions.player_id = req.query.player_id;
     }
+    const sortyBy = req.query.sortBy || "player_number";
+    const sortOrder = req.query.sortOrder || "ASC";
     try {
         const { count, rows } = await TeamPlayer.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
+            order: [[sortyBy, sortOrder.toUpperCase()]],
             include: [
                 {
                     model: Player,
@@ -58,6 +62,7 @@ export const getTeamPlayers = async (req, res) => {
                     id_team_player: teamPlayer.id_team_player,
                     team_id: teamPlayer.team_id,
                     player_id: teamPlayer.player_id,
+                    player_number: teamPlayer.player_number,
                     player: teamPlayer.player
                         ? {
                               name: teamPlayer.player.name,
@@ -126,31 +131,48 @@ export const getTeamPlayer = async (req, res) => {
 };
 
 export const createTeamPlayer = async (req, res) => {
-    try {
-        const teamPlayer = await TeamPlayer.create(req.body);
+    const { team_id, player_id, player_number } = req.body;
 
-        const player = await Player.findByPk(req.body.player_id);
-        const team = await Team.findByPk(req.body.team_id);
-        const teamPlayerResponse = {
-            id_team_player: teamPlayer.id_team_player,
-            team_id: teamPlayer.team_id,
-            player_id: teamPlayer.player_id,
-            player: player
-                ? {
-                      name: player.name,
-                      last_name: player.last_name,
-                      birthday: player.birthday,
-                      avatar: player.avatar,
-                      dni: player.dni,
-                  }
-                : null,
-            team: team
-                ? {
-                      name: team.name,
-                      avatar: team.avatar,
-                  }
-                : null,
-        };
+    // Check if all required fields are present
+    if (!team_id || !player_id || !player_number) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: "Missing required fields",
+            data: null,
+            timestamp: new Date().toISOString(),
+        });
+    }
+
+    const transaction = await sequelize.transaction();
+
+    try {
+        //Check if player number is already used
+        const isPlayerNumberUsed = await isPlayerNumberTaken(
+            team_id,
+            player_number,
+            transaction
+        );
+        if (isPlayerNumberUsed) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Player number already used",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
+        const teamPlayer = await TeamPlayer.create(req.body, { transaction });
+
+        const findPlayer = Player.findByPk(req.body.player_id, { transaction });
+        const findTeam = await Team.findByPk(req.body.team_id, { transaction });
+
+        const [player, team] = await Promise.all([findPlayer, findTeam]);
+
+        const teamPlayerResponse = formatTeamPlayerResponse(
+            teamPlayer,
+            player,
+            team
+        );
         res.status(201).json({
             success: true,
             message: "TeamPlayer created successfully",
@@ -165,6 +187,38 @@ export const createTeamPlayer = async (req, res) => {
         });
     }
 };
+
+const isPlayerNumberTaken = async (team_id, player_number, transaction) => {
+    return await TeamPlayer.findOne({
+        where: {
+            team_id,
+            player_number,
+        },
+        transaction,
+    });
+};
+
+const formatTeamPlayerResponse = (teamPlayer, player, team) => ({
+    id_team_player: teamPlayer.id_team_player,
+    team_id: teamPlayer.team_id,
+    player_id: teamPlayer.player_id,
+    player_number: teamPlayer.player_number,
+    player: player
+        ? {
+              name: player.name,
+              last_name: player.last_name,
+              birthday: player.birthday,
+              avatar: player.avatar,
+              dni: player.dni,
+          }
+        : null,
+    team: team
+        ? {
+              name: team.name,
+              avatar: team.avatar,
+          }
+        : null,
+});
 
 export const updateTeamPlayer = async (req, res) => {
     try {
