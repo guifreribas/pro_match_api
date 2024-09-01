@@ -161,6 +161,17 @@ export const createTeamPlayer = async (req, res) => {
                 timestamp: new Date().toISOString(),
             });
         }
+        //Check if player is already on the team
+        const isOnTeam = await isPlayerOnTeam(team_id, player_id, transaction);
+        if (isOnTeam) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Player is already on the team",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
         const teamPlayer = await TeamPlayer.create(req.body, { transaction });
 
         const findPlayer = Player.findByPk(req.body.player_id, { transaction });
@@ -186,6 +197,16 @@ export const createTeamPlayer = async (req, res) => {
             message: error.message,
         });
     }
+};
+
+const isPlayerOnTeam = async (team_id, player_id, transaction) => {
+    return await TeamPlayer.findOne({
+        where: {
+            team_id,
+            player_id,
+        },
+        transaction,
+    });
 };
 
 const isPlayerNumberTaken = async (team_id, player_number, transaction) => {
