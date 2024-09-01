@@ -22,10 +22,6 @@ const Organization = sequelize.define(
             defaultValue: null,
             allowNull: true,
         },
-        competition_id: {
-            type: DataTypes.INTEGER(10).UNSIGNED,
-            allowNull: false,
-        },
         user_id: {
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,

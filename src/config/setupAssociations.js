@@ -21,6 +21,8 @@ export function setupAssociations() {
     Category.belongsTo(User, { foreignKey: "user_id" });
     Category.belongsTo(Competition, { foreignKey: "competition_id" });
 
+    Competition.belongsTo(Organization, { foreignKey: "organization_id" });
+    Competition.belongsTo(User, { foreignKey: "user_id" });
     Competition.hasMany(Category, { foreignKey: "competition_id" });
     Competition.hasMany(Field, { foreignKey: "competition_id" });
     Competition.hasMany(Organization, { foreignKey: "competition_id" });
@@ -45,7 +47,6 @@ export function setupAssociations() {
     Match.hasMany(Goal, { foreignKey: "match_id" });
     Match.hasMany(Result, { foreignKey: "match_id" });
 
-    Organization.belongsTo(Competition, { foreignKey: "competition_id" });
     Organization.belongsTo(User, { foreignKey: "user_id" });
     Organization.hasMany(Category, { foreignKey: "organization_id" });
 
@@ -59,8 +60,6 @@ export function setupAssociations() {
     Player.hasMany(Foul, { foreignKey: "player_id" });
     Player.hasMany(Goal, { foreignKey: "player_id" });
 
-    // Team.belongsTo(Category, { foreignKey: "category_id" });
-    // Team.belongsTo(Organization, { foreignKey: "organization_id" });
     Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
     Team.belongsTo(User, { foreignKey: "user_id" });
 
