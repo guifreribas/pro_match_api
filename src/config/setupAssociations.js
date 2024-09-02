@@ -17,17 +17,17 @@ export function setupAssociations() {
     Card.belongsTo(Player, { foreignKey: "player_id" });
     Card.belongsTo(Team, { foreignKey: "team_id" });
 
-    Category.belongsTo(Organization, { foreignKey: "organization_id" });
+    // Category.belongsTo(Organization, { foreignKey: "organization_id" });
     Category.belongsTo(User, { foreignKey: "user_id" });
     Category.belongsTo(Competition, { foreignKey: "competition_id" });
 
-    Competition.belongsTo(Organization, { foreignKey: "organization_id" });
+    // Competition.belongsTo(Organization, { foreignKey: "organization_id" });
     Competition.belongsTo(User, { foreignKey: "user_id" });
     Competition.hasMany(Category, { foreignKey: "competition_id" });
     Competition.hasMany(Field, { foreignKey: "competition_id" });
-    Competition.hasMany(Organization, { foreignKey: "competition_id" });
+    // Competition.hasMany(Organization, { foreignKey: "competition_id" });
 
-    Field.belongsTo(Organization, { foreignKey: "organization_id" });
+    // Field.belongsTo(Organization, { foreignKey: "organization_id" });
     Field.belongsTo(Competition, { foreignKey: "competition_id" });
     Field.belongsTo(User, { foreignKey: "user_id" });
 
@@ -48,10 +48,10 @@ export function setupAssociations() {
     Match.hasMany(Result, { foreignKey: "match_id" });
 
     Organization.belongsTo(User, { foreignKey: "user_id" });
-    Organization.hasMany(Category, { foreignKey: "organization_id" });
+    Organization.hasMany(Field, { foreignKey: "organization_id" });
 
     Result.belongsTo(Match, { foreignKey: "match_id" });
-    Match.hasOne(Result, { foreignKey: "match_id" });
+    Match.hasOne(Result, { foreignKey: "result_id" });
     Match.hasMany(Goal, { foreignKey: "match_id" });
 
     Player.belongsTo(User, { foreignKey: "user_id" });
@@ -60,7 +60,7 @@ export function setupAssociations() {
     Player.hasMany(Foul, { foreignKey: "player_id" });
     Player.hasMany(Goal, { foreignKey: "player_id" });
 
-    Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
+    Team.hasMany(TeamPlayer, { foreignKey: "team_player_id" });
     Team.belongsTo(User, { foreignKey: "user_id" });
 
     TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
