@@ -13,9 +13,6 @@ export const getOrganizations = async (req, res) => {
     if (req.query.logo) {
         whereConditions.logo = req.query.logo;
     }
-    if (req.query.competition_id) {
-        whereConditions.competition_id = req.query.competition_id;
-    }
     if (req.query.user_id) {
         whereConditions.user_id = req.query.user_id;
     }
@@ -43,9 +40,11 @@ export const getOrganizations = async (req, res) => {
                 items: rows.map((organization) => ({
                     id_organization: organization.id_organization,
                     name: organization.name,
+                    address: organization.address,
                     logo: organization.logo,
-                    competition_id: organization.competition_id,
                     user_id: organization.user_id,
+                    createdAt: organization.createdAt,
+                    updatedAt: organization.updatedAt,
                 })),
                 itemCount: rows.length,
                 totalItems: count,
