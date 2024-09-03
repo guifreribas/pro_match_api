@@ -14,7 +14,7 @@ const Category = sequelize.define(
             allowNull: false,
         },
         gender: {
-            type: DataTypes.ENUM("MALE", "FEMALE", "MIXED"),
+            type: DataTypes.ENUM("MALE", "FEMALE", "OTHER"),
             allowNull: false,
         },
         organization_id: {
