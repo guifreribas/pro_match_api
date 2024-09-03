@@ -7,11 +7,17 @@ export const getCompetitions = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const whereConditions = {};
-    if (req.query.type) {
-        whereConditions.type = req.query.type;
+    if (req.query.q) {
+        whereConditions.name = { [Op.like]: `%${req.query.q}%` };
     }
-    if (req.query.subtype) {
-        whereConditions.subtype = req.query.subtype;
+    if (req.query.name) {
+        whereConditions.name = req.query.name;
+    }
+    if (req.query.format) {
+        whereConditions.format = req.query.format;
+    }
+    if (req.query.competition_type_id) {
+        whereConditions.competition_type_id = req.query.competition_type_id;
     }
 
     try {
@@ -36,8 +42,9 @@ export const getCompetitions = async (req, res) => {
             data: {
                 items: rows.map((competition) => ({
                     id_competition: competition.id_competition,
-                    type: competition.type,
-                    subtype: competition.subtype,
+                    name: competition.name,
+                    format: competition.format,
+                    competition_type_id: competition.competition_type_id,
                     createdAt: competition.createdAt,
                     updatedAt: competition.updatedAt,
                 })),
@@ -96,9 +103,6 @@ export const createCompetition = async (req, res) => {
             success: true,
             message: "Competition created successfully",
             data: competition,
-            links: {
-                self: `${config.API_BASE_URL}/competitions/${competition.id_competition}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -115,9 +119,6 @@ export const updateCompetition = async (req, res) => {
             success: true,
             message: "Competition updated successfully",
             data: competition,
-            links: {
-                self: `${config.API_BASE_URL}/competitions/${competition.id_competition}`,
-            },
             timestamp: new Date().toISOString(),
         });
     } catch (error) {
@@ -134,18 +135,12 @@ export const deleteCompetition = async (req, res) => {
             res.status(200).json({
                 success: true,
                 message: "Competition deleted successfully",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         } else {
             res.status(404).json({
                 success: false,
                 message: "Competition not found",
-                data: {
-                    id: req.params.id,
-                },
                 timestamp: new Date().toISOString(),
             });
         }
