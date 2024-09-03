@@ -9,12 +9,16 @@ const Competition = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        type: {
-            type: DataTypes.ENUM("LIGUE", "TOURNAMENT"),
+        name: {
+            type: DataTypes.STRING(30),
             allowNull: false,
         },
-        subtype: {
+        format: {
             type: DataTypes.ENUM("SINGLE_ROUND", "DOUBLE_ROUND", "KNOCKOUT"),
+            allowNull: false,
+        },
+        competition_type_id: {
+            type: DataTypes.INTEGER(2).UNSIGNED,
             allowNull: false,
         },
         organization_id: {
