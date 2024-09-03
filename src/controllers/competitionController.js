@@ -1,30 +1,54 @@
 import Competition from "../models/competitionModel.js";
 import config from "../config/config.js";
+import CompetitionType from "#src/models/competitionTypeModel.js";
+import Category from "#src/models/categoryModel.js";
+import CompetitionTeam from "#src/models/competitionTeamModel.js";
+import Team from "#src/models/teamModel.js";
+import Organization from "#src/models/organizationModel.js";
 
 export const getCompetitions = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const query = req.query;
 
     const whereConditions = {};
-    if (req.query.q) {
-        whereConditions.name = { [Op.like]: `%${req.query.q}%` };
+    if (query.q) {
+        whereConditions.name = { [Op.like]: `%${query.q}%` };
     }
-    if (req.query.name) {
-        whereConditions.name = req.query.name;
+    if (query.name) {
+        whereConditions.name = query.name;
     }
-    if (req.query.format) {
-        whereConditions.format = req.query.format;
+    if (query.format) {
+        whereConditions.format = query.format;
     }
-    if (req.query.competition_type_id) {
-        whereConditions.competition_type_id = req.query.competition_type_id;
+    if (query.competition_type_id) {
+        whereConditions.competition_type_id = query.competition_type_id;
     }
 
     try {
+        let include = [];
+        const includeCompetitionType = query.includeCompetitionType === "true";
+        const includeOrganization = query.includeOrganization === "true";
+
+        if (includeCompetitionType) {
+            include.push({
+                model: CompetitionType,
+                attributes: ["name"],
+            });
+        }
+        if (includeOrganization) {
+            include.push({
+                model: Organization,
+                attributes: ["name", "address", "logo"],
+            });
+        }
+
         const { count, rows } = await Competition.findAndCountAll({
             where: whereConditions,
             offset,
             limit,
+            include,
         });
         const totalPages = Math.ceil(count / limit);
         const previousLink =
