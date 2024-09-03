@@ -13,6 +13,10 @@ const Category = sequelize.define(
             type: DataTypes.STRING(40),
             allowNull: false,
         },
+        gender: {
+            type: DataTypes.ENUM("MALE", "FEMALE", "MIXED"),
+            allowNull: false,
+        },
         organization_id: {
             type: DataTypes.INTEGER(10).UNSIGNED,
             allowNull: false,
@@ -32,9 +36,5 @@ const Category = sequelize.define(
         createdAt: "created_at",
     }
 );
-
-// Category.belongsTo(Organization, { foreignKey: "organization_id" });
-// Category.belongsTo(Competition, { foreignKey: "competition_id" });
-// Category.belongsTo(User, { foreignKey: "user_id" });
 
 export default Category;
