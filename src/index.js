@@ -44,7 +44,7 @@ app.use("/api/categories", categoriesRouter);
 app.use("/api/competition-categories", competitionCategoriesRoutes);
 app.use("/api/competition-teams", competitionsTeamsRoutes);
 app.use("/api/competition-types", competitionTypesRoutes);
-app.use("/api/competition", competitionsRoutes);
+app.use("/api/competitions", competitionsRoutes);
 app.use("/api/fields", fieldsRouter);
 app.use("/api/fouls", foulRouter);
 app.use("/api/goals", goalRouter);
