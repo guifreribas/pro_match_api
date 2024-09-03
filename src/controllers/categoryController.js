@@ -11,6 +11,9 @@ export const getCategories = async (req, res) => {
     if (req.query.name) {
         whereConditions.name = { [Op.like]: `%${req.query.name}%` };
     }
+    if (req.query.gender) {
+        whereConditions.gender = req.query.gender;
+    }
     if (req.query.organization_id) {
         whereConditions.organization_id = req.query.organization_id;
     }
@@ -44,6 +47,7 @@ export const getCategories = async (req, res) => {
                 items: rows.map((category) => ({
                     id_category: category.id_category,
                     name: category.name,
+                    gender: category.gender,
                     organization_id: category.organization_id,
                     competition_id: category.competition_id,
                     user_id: category.user_id,
