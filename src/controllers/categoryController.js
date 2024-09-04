@@ -17,9 +17,6 @@ export const getCategories = async (req, res) => {
     if (req.query.organization_id) {
         whereConditions.organization_id = req.query.organization_id;
     }
-    if (req.query.competition_id) {
-        whereConditions.competition_id = req.query.competition_id;
-    }
     if (req.query.user_id) {
         whereConditions.user_id = req.query.user_id;
     }
@@ -49,7 +46,6 @@ export const getCategories = async (req, res) => {
                     name: category.name,
                     gender: category.gender,
                     organization_id: category.organization_id,
-                    competition_id: category.competition_id,
                     user_id: category.user_id,
                     createdAt: category.createdAt,
                     updatedAt: category.updatedAt,

@@ -23,7 +23,6 @@ export function setupAssociations() {
 
     // Relacions pel model "Category"
     Category.belongsTo(Organization, { foreignKey: "organization_id" });
-    Category.belongsTo(Competition, { foreignKey: "competition_id" });
     Category.belongsTo(User, { foreignKey: "user_id" });
 
     // Relacions pel model "CompetitionCategory"
