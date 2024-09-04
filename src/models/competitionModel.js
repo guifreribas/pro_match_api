@@ -14,7 +14,13 @@ const Competition = sequelize.define(
             allowNull: false,
         },
         format: {
-            type: DataTypes.ENUM("SINGLE_ROUND", "DOUBLE_ROUND", "KNOCKOUT"),
+            type: DataTypes.ENUM(
+                "SINGLE_ROUND",
+                "DOUBLE_ROUND",
+                "KNOCKOUT",
+                "KNOCKOUT_DOUBLE",
+                "KNOCKOUT_SINGLE"
+            ),
             allowNull: false,
         },
         competition_type_id: {

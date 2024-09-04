@@ -5,6 +5,8 @@ import Category from "#src/models/categoryModel.js";
 import CompetitionTeam from "#src/models/competitionTeamModel.js";
 import Team from "#src/models/teamModel.js";
 import Organization from "#src/models/organizationModel.js";
+import CompetitionCategory from "#src/models/competitionCategoryModel.js";
+import { sequelize } from "#src/db.js";
 
 export const getCompetitions = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -131,6 +133,124 @@ export const createCompetition = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ error: "Error to create competition" });
+    }
+};
+
+export const createCompetitionFull = async (req, res) => {
+    console.log("user_id", req.user.id_user);
+    if (!req.user.id_user) {
+        return res.status(401).json({
+            success: false,
+            message: "You must be logged in to create a competition",
+            timestamp: new Date().toISOString(),
+        });
+    }
+    if (
+        !req.body.name ||
+        !req.body.format ||
+        !req.body.competition_type_id ||
+        !req.body.organization_id ||
+        !req.body.category
+    ) {
+        return res.status(400).json({
+            success: false,
+            message: "Missing required fields",
+            timestamp: new Date().toISOString(),
+        });
+    }
+
+    const transaction = await sequelize.transaction();
+
+    try {
+        const createdCompetition = await Competition.create(
+            {
+                name: req.body.name,
+                format: req.body.format,
+                competition_type_id: req.body.competition_type_id,
+                organization_id: req.body.organization_id,
+                user_id: req.user.id_user,
+            },
+            { transaction }
+        );
+        console.log(createdCompetition);
+        if (!createdCompetition) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Error to create competition",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
+
+        const category = await Category.create(
+            {
+                name: req.body.name,
+                gender: req.body.category,
+                organization_id: req.body.organization_id,
+                competition_id: createdCompetition.id_competition,
+                user_id: req.user.id_user,
+            },
+            { transaction }
+        );
+
+        if (!category) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Error to create category",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
+
+        const competitionCategory = await CompetitionCategory.create(
+            {
+                competition_id: createdCompetition.id_competition,
+                category_id: category.id_category,
+                season: req.body.season,
+                user_id: req.user.id_user,
+            },
+            { transaction }
+        );
+        if (!competitionCategory) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Error to create competitionCategory",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
+
+        await transaction.commit();
+
+        res.status(201).json({
+            success: true,
+            message: "Competition created successfully",
+            data: {
+                id_competition: createdCompetition.id_competition,
+                name: createdCompetition.name,
+                format: createdCompetition.format,
+                competition_type_id: createdCompetition.competition_type_id,
+                category,
+                competitionCategory,
+                createdAt: createdCompetition.createdAt,
+                updatedAt: createdCompetition.updatedAt,
+            },
+
+            timestamp: new Date().toISOString(),
+        });
+    } catch (error) {
+        console.error("Error details:", error); // Això mostrarà més informació de l'error
+        await transaction.rollback();
+        res.status(500).json({
+            success: false,
+            message: "Error to create competition",
+            error: error.message, // Això inclourà el missatge d'error al cos de la resposta
+            timestamp: new Date().toISOString(),
+        });
+        // res.status(500).json({ error: "Error to create competition" });
     }
 };
 

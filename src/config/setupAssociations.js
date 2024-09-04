@@ -30,6 +30,7 @@ export function setupAssociations() {
         foreignKey: "competition_id",
     });
     CompetitionCategory.belongsTo(Category, { foreignKey: "category_id" });
+    CompetitionCategory.belongsTo(User, { foreignKey: "user_id" });
 
     // Relacions pel model "Competition"
     Competition.belongsTo(CompetitionType, {

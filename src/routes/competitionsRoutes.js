@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
     createCompetition,
+    createCompetitionFull,
     deleteCompetition,
     getCompetition,
     getCompetitions,
@@ -13,6 +14,7 @@ const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
 router.get("/", authenticateToken(allRoles), getCompetitions);
 router.get("/:id", authenticateToken(allRoles), getCompetition);
+router.post("/full", authenticateToken(allRoles), createCompetitionFull);
 router.post("/", authenticateToken(allRoles), createCompetition);
 router.put("/:id", authenticateToken(allRoles), updateCompetition);
 router.delete("/:id", authenticateToken(allRoles), deleteCompetition);

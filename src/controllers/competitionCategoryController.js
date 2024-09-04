@@ -46,6 +46,7 @@ export const getCompetitionCategories = async (req, res) => {
                         competitionCategory.id_competition_category,
                     competition_id: competitionCategory.competition_id,
                     category_id: competitionCategory.category_id,
+                    user_id: competitionCategory.user_id,
                     season: competitionCategory.season,
                     createdAt: competitionCategory.createdAt,
                     updatedAt: competitionCategory.updatedAt,
