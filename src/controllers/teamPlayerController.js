@@ -63,7 +63,7 @@ export const getTeamPlayers = async (req, res) => {
                     team_id: teamPlayer.team_id,
                     player_id: teamPlayer.player_id,
                     player_number: teamPlayer.player_number,
-                    player: teamPlayer.player
+                    player: teamPlayer?.player
                         ? {
                               name: teamPlayer.player.name,
                               last_name: teamPlayer.player.last_name,
@@ -72,7 +72,7 @@ export const getTeamPlayers = async (req, res) => {
                               dni: teamPlayer.player.dni,
                           }
                         : null,
-                    team: teamPlayer.team
+                    team: teamPlayer?.team
                         ? {
                               name: teamPlayer.team.name,
                               avatar: teamPlayer.team.avatar,
