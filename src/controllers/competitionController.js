@@ -2,8 +2,6 @@ import Competition from "../models/competitionModel.js";
 import config from "../config/config.js";
 import CompetitionType from "#src/models/competitionTypeModel.js";
 import Category from "#src/models/categoryModel.js";
-import CompetitionTeam from "#src/models/competitionTeamModel.js";
-import Team from "#src/models/teamModel.js";
 import Organization from "#src/models/organizationModel.js";
 import CompetitionCategory from "#src/models/competitionCategoryModel.js";
 import { sequelize } from "#src/db.js";
@@ -70,6 +68,18 @@ export const getCompetitions = async (req, res) => {
                     id_competition: competition.id_competition,
                     name: competition.name,
                     format: competition.format,
+                    competitionType: competition?.competition_type
+                        ? {
+                              name: competition.competition_type.name,
+                          }
+                        : null,
+                    organization: competition?.organization
+                        ? {
+                              name: competition.organization.name,
+                              address: competition.organization.address,
+                              logo: competition.organization.logo,
+                          }
+                        : null,
                     competition_type_id: competition.competition_type_id,
                     createdAt: competition.createdAt,
                     updatedAt: competition.updatedAt,
