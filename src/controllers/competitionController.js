@@ -30,6 +30,8 @@ export const getCompetitions = async (req, res) => {
         let include = [];
         const includeCompetitionType = query.includeCompetitionType === "true";
         const includeOrganization = query.includeOrganization === "true";
+        const includeCompetitionCategory =
+            query.includeCompetitionCategory === "true";
 
         if (includeCompetitionType) {
             include.push({
@@ -41,6 +43,18 @@ export const getCompetitions = async (req, res) => {
             include.push({
                 model: Organization,
                 attributes: ["name", "address", "logo"],
+            });
+        }
+        if (includeCompetitionCategory) {
+            include.push({
+                model: CompetitionCategory,
+                attributes: ["season"],
+                include: [
+                    {
+                        model: Category,
+                        attributes: ["name", "gender"],
+                    },
+                ],
             });
         }
 
@@ -78,6 +92,21 @@ export const getCompetitions = async (req, res) => {
                               name: competition.organization.name,
                               address: competition.organization.address,
                               logo: competition.organization.logo,
+                          }
+                        : null,
+
+                    competitionCategory: competition?.competition_category
+                        ? {
+                              season: competition.competition_category.season,
+                              category: competition.competition_category
+                                  .category
+                                  ? {
+                                        name: competition.competition_category
+                                            .category.name,
+                                        gender: competition.competition_category
+                                            .category.gender,
+                                    }
+                                  : null,
                           }
                         : null,
                     competition_type_id: competition.competition_type_id,
