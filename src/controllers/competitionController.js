@@ -22,6 +22,9 @@ export const getCompetitions = async (req, res) => {
     if (query.format) {
         whereConditions.format = query.format;
     }
+    if (query.is_initizalized) {
+        whereConditions.is_initizalized = query.is_initizalized;
+    }
     if (query.competition_type_id) {
         whereConditions.competition_type_id = query.competition_type_id;
     }
@@ -82,7 +85,7 @@ export const getCompetitions = async (req, res) => {
                     id_competition: competition.id_competition,
                     name: competition.name,
                     format: competition.format,
-                    isInitizalized: competition.is_initizalized,
+                    isInitizalized: competition.is_initizalized === 1,
                     competitionType: competition?.competition_type
                         ? {
                               name: competition.competition_type.name,
@@ -188,6 +191,7 @@ export const createCompetitionFull = async (req, res) => {
     if (
         !req.body.name ||
         !req.body.format ||
+        !req.body.is_initizalized ||
         !req.body.competition_type_id ||
         !req.body.organization_id ||
         !req.body.category
@@ -206,6 +210,7 @@ export const createCompetitionFull = async (req, res) => {
             {
                 name: req.body.name,
                 format: req.body.format,
+                is_initizalized: req.body.is_initizalized === true ? 1 : 0,
                 competition_type_id: req.body.competition_type_id,
                 organization_id: req.body.organization_id,
                 user_id: req.user.id_user,
@@ -272,6 +277,8 @@ export const createCompetitionFull = async (req, res) => {
                 id_competition: createdCompetition.id_competition,
                 name: createdCompetition.name,
                 format: createdCompetition.format,
+                isInitizalized: createdCompetition.is_initizalized,
+                is_initizalized: createdCompetition.is_initizalized,
                 competition_type_id: createdCompetition.competition_type_id,
                 category,
                 competitionCategory,
