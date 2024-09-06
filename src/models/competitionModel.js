@@ -23,6 +23,11 @@ const Competition = sequelize.define(
             ),
             allowNull: false,
         },
+        is_initizalized: {
+            type: DataTypes.TINYINT(1),
+            defaultValue: 0,
+            allowNull: false,
+        },
         competition_type_id: {
             type: DataTypes.INTEGER(2).UNSIGNED,
             allowNull: false,

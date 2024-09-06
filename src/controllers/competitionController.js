@@ -82,6 +82,7 @@ export const getCompetitions = async (req, res) => {
                     id_competition: competition.id_competition,
                     name: competition.name,
                     format: competition.format,
+                    isInitizalized: competition.is_initizalized,
                     competitionType: competition?.competition_type
                         ? {
                               name: competition.competition_type.name,
