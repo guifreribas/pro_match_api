@@ -14,6 +14,7 @@ const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 router.get("/", authenticateToken(allRoles), getPlayers);
 router.get("/:id", authenticateToken(allRoles), getPlayer);
 router.post("/", authenticateToken(allRoles), createPlayer);
+router.post("/", authenticateToken(allRoles), createPlayer);
 router.put("/:id", authenticateToken(allRoles), updatePlayer);
 router.delete("/:id", authenticateToken(allRoles), deletePlayer);
 
