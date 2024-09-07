@@ -183,7 +183,6 @@ export const createCompetition = async (req, res) => {
 };
 
 export const createCompetitionFull = async (req, res) => {
-    console.log("user_id", req.user.id_user);
     if (!req.user.id_user) {
         return res.status(401).json({
             success: false,
@@ -194,10 +193,10 @@ export const createCompetitionFull = async (req, res) => {
     if (
         !req.body.name ||
         !req.body.format ||
-        !req.body.is_initialized ||
         !req.body.competition_type_id ||
         !req.body.organization_id ||
-        !req.body.category
+        !req.body.category ||
+        !req.body.season
     ) {
         return res.status(400).json({
             success: false,
@@ -213,7 +212,7 @@ export const createCompetitionFull = async (req, res) => {
             {
                 name: req.body.name,
                 format: req.body.format,
-                is_initialized: req.body.is_initialized === true ? 1 : 0,
+                is_initialized: false,
                 competition_type_id: req.body.competition_type_id,
                 organization_id: req.body.organization_id,
                 user_id: req.user.id_user,
