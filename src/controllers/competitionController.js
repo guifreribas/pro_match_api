@@ -25,8 +25,14 @@ export const getCompetitions = async (req, res) => {
     if (query.is_initialized) {
         whereConditions.is_initialized = query.is_initialized;
     }
+    if (query.organization_id) {
+        whereConditions.organization_id = query.organization_id;
+    }
     if (query.competition_type_id) {
         whereConditions.competition_type_id = query.competition_type_id;
+    }
+    if (query.user_id) {
+        whereConditions.user_id = query.user_id;
     }
 
     try {
