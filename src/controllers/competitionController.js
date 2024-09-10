@@ -13,7 +13,9 @@ export const getCompetitions = async (req, res) => {
 	const offset = (page - 1) * limit;
 	const query = req.query;
 
-	const whereConditions = {};
+	const whereConditions = {
+		user_id: req.user.id_user,
+	};
 	if (query.q) {
 		whereConditions.name = { [Op.like]: `%${query.q}%` };
 	}
@@ -31,9 +33,6 @@ export const getCompetitions = async (req, res) => {
 	}
 	if (query.competition_type_id) {
 		whereConditions.competition_type_id = query.competition_type_id;
-	}
-	if (query.user_id) {
-		whereConditions.user_id = query.user_id;
 	}
 
 	try {
