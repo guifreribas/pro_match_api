@@ -27,11 +27,42 @@ import usersRouter from "../src/routes/usersRoutes.js";
 
 const app = express();
 
+// app.use((req, res, next) => {
+//     console.log("Nova petició rebuda:");
+//     console.log("Mètode:", req.method);
+//     console.log("URL:", req.url);
+//     console.log("Origen:", req.get("Origin") || "No especificat");
+//     console.log("User-Agent:", req.get("User-Agent"));
+//     console.log("IP:", req.ip);
+//     console.log("Headers:", req.headers);
+//     console.log("---");
+//     console.log.apply("token", req.headers.token);
+//     next();
+// });
+
+// const allowedOrigins = ["http://localhost:4200", "http://localhost:3000"];
+
+// app.use(
+//     cors({
+//         origin: function (origin, callback) {
+//             if (!origin) return callback(null, true); // Permet peticions sense origen (com Postman)
+//             if (allowedOrigins.includes(origin)) {
+//                 return callback(null, true); // Permet si l'origen està a la llista
+//             }
+//             return callback(new Error("Not allowed by CORS")); // Bloqueja si l'origen no està permès
+//         },
+//         credentials: true, // Permet enviar cookies
+//         methods: "GET,POST,PUT,DELETE", // Permet aquests mètodes HTTP
+//         allowedHeaders: "Content-Type,Authorization", // Capçaleres permeses
+//         exposedHeaders: "Set-Cookie", // Exposa Set-Cookie al client
+//     })
+// );
+
 app.use(
-    cors({
-        credentials: true,
-        origin: "http://localhost:4200",
-    })
+	cors({
+		credentials: true,
+		origin: "http://localhost:4200",
+	})
 );
 app.use(cookieParser());
 app.use(express.json());
