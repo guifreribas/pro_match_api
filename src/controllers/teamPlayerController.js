@@ -132,9 +132,10 @@ export const getTeamPlayer = async (req, res) => {
 
 export const createTeamPlayer = async (req, res) => {
     const { team_id, player_id, player_number } = req.body;
+    const user_id = req.user.id_user;
 
     // Check if all required fields are present
-    if (!team_id || !player_id || !player_number) {
+    if (!team_id || !player_id || !player_number || !user_id) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
             message: "Missing required fields",
@@ -172,10 +173,18 @@ export const createTeamPlayer = async (req, res) => {
                 timestamp: new Date().toISOString(),
             });
         }
-        const teamPlayer = await TeamPlayer.create(req.body, { transaction });
+        const teamPlayer = await TeamPlayer.create(
+            {
+                player_id: player_id,
+                team_id: team_id,
+                user_id: user_id,
+                player_number: player_number,
+            },
+            { transaction }
+        );
 
-        const findPlayer = Player.findByPk(req.body.player_id, { transaction });
-        const findTeam = await Team.findByPk(req.body.team_id, { transaction });
+        const findPlayer = Player.findByPk(player_id, { transaction });
+        const findTeam = await Team.findByPk(team_id, { transaction });
 
         const [player, team] = await Promise.all([findPlayer, findTeam]);
 
@@ -184,13 +193,24 @@ export const createTeamPlayer = async (req, res) => {
             player,
             team
         );
+        if (!teamPlayerResponse) {
+            await transaction.rollback();
+            return res.status(400).json({
+                success: false,
+                message: "Error to create teamPlayer",
+                data: null,
+                timestamp: new Date().toISOString(),
+            });
+        }
         res.status(201).json({
             success: true,
             message: "TeamPlayer created successfully",
             data: teamPlayerResponse,
             timestamp: new Date().toISOString(),
         });
+        await transaction.commit();
     } catch (error) {
+        await transaction.rollback();
         console.error(error);
         res.status(500).json({
             error: "Error to create teamPlayer",
