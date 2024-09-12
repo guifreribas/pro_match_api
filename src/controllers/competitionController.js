@@ -13,9 +13,7 @@ export const getCompetitions = async (req, res) => {
 	const offset = (page - 1) * limit;
 	const query = req.query;
 
-	const whereConditions = {
-		user_id: req.user.id_user,
-	};
+	const whereConditions = {};
 	if (query.q) {
 		whereConditions.name = { [Op.like]: `%${query.q}%` };
 	}
@@ -33,6 +31,9 @@ export const getCompetitions = async (req, res) => {
 	}
 	if (query.competition_type_id) {
 		whereConditions.competition_type_id = query.competition_type_id;
+	}
+	if (req.user.id_user) {
+		whereConditions.user_id = req.user.id_user;
 	}
 
 	try {
@@ -198,13 +199,14 @@ export const createCompetitionFull = async (req, res) => {
 			timestamp: new Date().toISOString(),
 		});
 	}
+	console.log(req.body);
 	if (
 		!req.body.name ||
 		!req.body.format ||
 		!req.body.competition_type_id ||
 		!req.body.organization_id ||
-		!req.body.category ||
-		!req.body.season
+		!req.body.season ||
+		!req.body.category_id
 	) {
 		return res.status(400).json({
 			success: false,
@@ -238,31 +240,10 @@ export const createCompetitionFull = async (req, res) => {
 			});
 		}
 
-		const category = await Category.create(
-			{
-				name: req.body.name,
-				gender: req.body.category,
-				organization_id: req.body.organization_id,
-				competition_id: createdCompetition.id_competition,
-				user_id: req.user.id_user,
-			},
-			{ transaction }
-		);
-
-		if (!category) {
-			await transaction.rollback();
-			return res.status(400).json({
-				success: false,
-				message: "Error to create category",
-				data: null,
-				timestamp: new Date().toISOString(),
-			});
-		}
-
 		const competitionCategory = await CompetitionCategory.create(
 			{
 				competition_id: createdCompetition.id_competition,
-				category_id: category.id_category,
+				category_id: req.body.category_id,
 				season: req.body.season,
 				user_id: req.user.id_user,
 			},
@@ -289,7 +270,6 @@ export const createCompetitionFull = async (req, res) => {
 				format: createdCompetition.format,
 				isInitizalized: createdCompetition?.is_initialized === 1,
 				competition_type_id: createdCompetition.competition_type_id,
-				category,
 				competitionCategory,
 				createdAt: createdCompetition.createdAt,
 				updatedAt: createdCompetition.updatedAt,
