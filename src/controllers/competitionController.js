@@ -17,6 +17,9 @@ export const getCompetitions = async (req, res) => {
 	if (query.q) {
 		whereConditions.name = { [Op.like]: `%${query.q}%` };
 	}
+	if (query.id_competition) {
+		whereConditions.id_competition = query.id_competition;
+	}
 	if (query.name) {
 		whereConditions.name = query.name;
 	}
@@ -58,7 +61,7 @@ export const getCompetitions = async (req, res) => {
 		if (includeCompetitionCategory) {
 			include.push({
 				model: CompetitionCategory,
-				attributes: ["season"],
+				attributes: ["id_competition_category", "season"],
 				include: [
 					{
 						model: Category,
@@ -108,6 +111,9 @@ export const getCompetitions = async (req, res) => {
 
 					competitionCategory: competition?.competition_category
 						? {
+								competition_category_id:
+									competition.competition_category
+										.id_competition_category,
 								season: competition.competition_category.season,
 								category: competition.competition_category
 									.category
