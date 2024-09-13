@@ -16,79 +16,83 @@ import CompetitionTeam from "#src/models/competitionTeamModel.js";
 import CompetitionType from "#src/models/competitionTypeModel.js";
 
 export function setupAssociations() {
-    // Relacions pel model "Card"
-    Card.belongsTo(Match, { foreignKey: "match_id" });
-    Card.belongsTo(Player, { foreignKey: "player_id" });
-    Card.belongsTo(Team, { foreignKey: "team_id" });
+	// Relacions pel model "Card"
+	Card.belongsTo(Match, { foreignKey: "match_id" });
+	Card.belongsTo(Player, { foreignKey: "player_id" });
+	Card.belongsTo(Team, { foreignKey: "team_id" });
 
-    // Relacions pel model "Category"
-    Category.belongsTo(Organization, { foreignKey: "organization_id" });
-    Category.belongsTo(User, { foreignKey: "user_id" });
+	// Relacions pel model "Category"
+	Category.belongsTo(Organization, { foreignKey: "organization_id" });
+	Category.belongsTo(User, { foreignKey: "user_id" });
 
-    // Relacions pel model "CompetitionCategory"
-    CompetitionCategory.belongsTo(Competition, {
-        foreignKey: "competition_id",
-    });
-    CompetitionCategory.belongsTo(Category, { foreignKey: "category_id" });
-    CompetitionCategory.belongsTo(User, { foreignKey: "user_id" });
+	// Relacions pel model "CompetitionCategory"
+	CompetitionCategory.belongsTo(Competition, {
+		foreignKey: "competition_id",
+	});
+	CompetitionCategory.belongsTo(Category, { foreignKey: "category_id" });
+	CompetitionCategory.belongsTo(User, { foreignKey: "user_id" });
 
-    // Relacions pel model "Competition"
-    Competition.belongsTo(CompetitionType, {
-        foreignKey: "competition_type_id",
-    });
-    Competition.belongsTo(Organization, { foreignKey: "organization_id" });
-    Competition.belongsTo(User, { foreignKey: "user_id" });
-    Competition.hasOne(CompetitionCategory, { foreignKey: "competition_id" });
+	// Relacions pel model "Competition"
+	Competition.belongsTo(CompetitionType, {
+		foreignKey: "competition_type_id",
+	});
+	Competition.belongsTo(Organization, { foreignKey: "organization_id" });
+	Competition.belongsTo(User, { foreignKey: "user_id" });
+	Competition.hasOne(CompetitionCategory, { foreignKey: "competition_id" });
 
-    // Relacions pel model "CompetitionTeam"
-    CompetitionTeam.belongsTo(CompetitionCategory, {
-        foreignKey: "competition_category_id",
-    });
-    CompetitionTeam.belongsTo(Team, { foreignKey: "team_id" });
+	// Relacions pel model "CompetitionTeam"
+	CompetitionTeam.belongsTo(CompetitionCategory, {
+		foreignKey: "competition_category_id",
+	});
+	CompetitionTeam.belongsTo(Team, { foreignKey: "team_id" });
 
-    // Relacions pel model "Field"
-    Field.belongsTo(Organization, { foreignKey: "organization_id" });
-    Field.belongsTo(User, { foreignKey: "user_id" });
+	// Relacions pel model "Field"
+	Field.belongsTo(Organization, { foreignKey: "organization_id" });
+	Field.belongsTo(User, { foreignKey: "user_id" });
 
-    // Relacions pel model "Foul"
-    Foul.belongsTo(Match, { foreignKey: "match_id" });
-    Foul.belongsTo(Player, { foreignKey: "player_id" });
-    Foul.belongsTo(Team, { foreignKey: "team_id" });
+	// Relacions pel model "Foul"
+	Foul.belongsTo(Match, { foreignKey: "match_id" });
+	Foul.belongsTo(Player, { foreignKey: "player_id" });
+	Foul.belongsTo(Team, { foreignKey: "team_id" });
 
-    // Relacions pel model "Goal"
-    Goal.belongsTo(Match, { foreignKey: "match_id" });
-    Goal.belongsTo(Player, { foreignKey: "player_id" });
-    Goal.belongsTo(Team, { foreignKey: "team_id" });
+	// Relacions pel model "Goal"
+	Goal.belongsTo(Match, { foreignKey: "match_id" });
+	Goal.belongsTo(Player, { foreignKey: "player_id" });
+	Goal.belongsTo(Team, { foreignKey: "team_id" });
 
-    // Relacions pel model "Match"
-    Match.belongsTo(Category, { foreignKey: "category_id" });
-    Match.belongsTo(Team, { foreignKey: "local_team" });
-    Match.belongsTo(Team, { foreignKey: "visitor_team" });
+	// Relacions pel model "Match"
+	Match.belongsTo(CompetitionCategory, {
+		foreignKey: "competition_category_id",
+	});
+	Match.belongsTo(User, { foreignKey: "user_id" });
+	Match.belongsTo(Team, { foreignKey: "local_team" });
+	Match.belongsTo(Team, { foreignKey: "visitor_team" });
 
-    // Relacions pel model "Organization"
-    Organization.belongsTo(User, { foreignKey: "user_id" });
+	// Relacions pel model "Organization"
+	Organization.belongsTo(User, { foreignKey: "user_id" });
 
-    // Relacions pel model "Player"
-    Player.belongsTo(User, { foreignKey: "user_id" });
-    Player.hasMany(TeamPlayer, { foreignKey: "player_id" });
+	// Relacions pel model "Player"
+	Player.belongsTo(User, { foreignKey: "user_id" });
+	Player.hasMany(TeamPlayer, { foreignKey: "player_id" });
 
-    // Relacions pel model "Result"
-    Result.belongsTo(Match, { foreignKey: "match_id" });
+	// Relacions pel model "Result"
+	Result.belongsTo(Match, { foreignKey: "match_id" });
 
-    // Relacions pel model "Team"
-    Team.belongsTo(User, { foreignKey: "user_id" });
-    Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
+	// Relacions pel model "Team"
+	Team.belongsTo(User, { foreignKey: "user_id" });
+	Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
 
-    // Relacions pel model "TeamPlayer"
-    TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
-    TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
-    TeamPlayer.belongsTo(User, { foreignKey: "user_id" });
+	// Relacions pel model "TeamPlayer"
+	TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
+	TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
+	TeamPlayer.belongsTo(User, { foreignKey: "user_id" });
 
-    // Relacions pel model "User"
-    User.hasMany(Organization, { foreignKey: "user_id" });
-    User.hasMany(Field, { foreignKey: "user_id" });
-    User.hasMany(Player, { foreignKey: "user_id" });
-    User.hasMany(TeamPlayer, { foreignKey: "user_id" });
+	// Relacions pel model "User"
+	User.hasMany(Organization, { foreignKey: "user_id" });
+	User.hasMany(Field, { foreignKey: "user_id" });
+	User.hasMany(Player, { foreignKey: "user_id" });
+	User.hasMany(TeamPlayer, { foreignKey: "user_id" });
+	User.hasMany(Match, { foreignKey: "user_id" });
 }
 
 // export function setupAssociations() {
