@@ -95,7 +95,7 @@ export const getCompetitions = async (req, res) => {
 					id_competition: competition.id_competition,
 					name: competition.name,
 					format: competition.format,
-					isInitizalized: competition?.is_initialized === 1,
+					is_initizalized: competition?.is_initialized === 1,
 					competitionType: competition?.competition_type
 						? {
 								name: competition.competition_type.name,
