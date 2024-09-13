@@ -22,10 +22,6 @@ const Match = sequelize.define(
 			defaultValue: "TO_BE_SCHEDULED",
 			allowNull: false,
 		},
-		category_id: {
-			type: DataTypes.INTEGER(10).UNSIGNED,
-			allowNull: false,
-		},
 		local_team: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
