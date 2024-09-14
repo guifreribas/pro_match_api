@@ -65,8 +65,8 @@ export function setupAssociations() {
 		foreignKey: "competition_category_id",
 	});
 	Match.belongsTo(User, { foreignKey: "user_id" });
-	Match.belongsTo(Team, { foreignKey: "local_team" });
-	Match.belongsTo(Team, { foreignKey: "visitor_team" });
+	Match.belongsTo(Team, { as: "localTeam", foreignKey: "local_team" });
+	Match.belongsTo(Team, { as: "visitorTeam", foreignKey: "visitor_team" });
 
 	// Relacions pel model "Organization"
 	Organization.belongsTo(User, { foreignKey: "user_id" });
@@ -81,6 +81,8 @@ export function setupAssociations() {
 	// Relacions pel model "Team"
 	Team.belongsTo(User, { foreignKey: "user_id" });
 	Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
+	Team.hasMany(Match, { foreignKey: "local_team", as: "homeMatches" });
+	Team.hasMany(Match, { foreignKey: "visitor_team", as: "awayMatches" });
 
 	// Relacions pel model "TeamPlayer"
 	TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
