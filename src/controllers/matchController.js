@@ -123,6 +123,7 @@ export const getMatch = async (req, res) => {
 };
 
 export const createMatch = async (req, res) => {
+	const transaction = await sequelize.transaction();
 	try {
 		const match = await Match.create(req.body);
 		res.status(201).json({
@@ -131,7 +132,9 @@ export const createMatch = async (req, res) => {
 			data: match,
 			timestamp: new Date().toISOString(),
 		});
+		await transaction.commit();
 	} catch (error) {
+		await transaction.rollback();
 		res.status(500).json({ error: "Error to create match" });
 	}
 };
