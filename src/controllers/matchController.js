@@ -1,4 +1,5 @@
 import Match from "../models/matchModel.js";
+import Team from "../models/teamModel.js";
 import config from "../config/config.js";
 
 export const getMatches = async (req, res) => {
@@ -23,11 +24,26 @@ export const getMatches = async (req, res) => {
 	if (req.query.date) {
 		whereConditions.date = req.query.date;
 	}
+	if (req.query.user_id) {
+		whereConditions.user_id = req.query.user_id;
+	}
 	try {
 		const { count, rows } = await Match.findAndCountAll({
 			where: whereConditions,
 			offset,
 			limit,
+			include: [
+				{
+					model: Team,
+					as: "localTeam",
+					attributes: ["name", "avatar"],
+				},
+				{
+					model: Team,
+					as: "visitorTeam",
+					attributes: ["name", "avatar"],
+				},
+			],
 		});
 		const totalPages = Math.ceil(count / limit);
 		const previousLink =
@@ -44,8 +60,16 @@ export const getMatches = async (req, res) => {
 				items: rows.map((match) => ({
 					id_match: match.id_match,
 					status: match.status,
-					local_team: match.local_team,
-					visitor_team: match.visitor_team,
+					local_team: {
+						id_team: match.localTeam.id_team,
+						name: match.localTeam.name,
+						avatar: match.localTeam.avatar,
+					},
+					visitor_team: {
+						id_team: match.visitorTeam.id_team,
+						name: match.visitorTeam.name,
+						avatar: match.visitorTeam.avatar,
+					},
 					competition_category_id: match.competition_category_id,
 					user_id: match.user_id,
 					date: match.date,
