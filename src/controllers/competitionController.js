@@ -265,8 +265,6 @@ export const createCompetitionFull = async (req, res) => {
 			});
 		}
 
-		await transaction.commit();
-
 		res.status(201).json({
 			success: true,
 			message: "Competition created successfully",
@@ -283,6 +281,7 @@ export const createCompetitionFull = async (req, res) => {
 
 			timestamp: new Date().toISOString(),
 		});
+		await transaction.commit();
 	} catch (error) {
 		console.error("Error details:", error); // Això mostrarà més informació de l'error
 		await transaction.rollback();
