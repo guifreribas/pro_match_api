@@ -1,10 +1,10 @@
 import { Router } from "express";
 import {
-    createPlayer,
-    deletePlayer,
-    getPlayer,
-    getPlayers,
-    updatePlayer,
+	createPlayer,
+	deletePlayer,
+	getPlayer,
+	getPlayers,
+	updatePlayer,
 } from "../controllers/playerController.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
 
