@@ -24,6 +24,7 @@ import resultsRouter from "../src/routes/resultsRoutes.js";
 import teamsPlayersRouter from "../src/routes/teamsPlayersRoutes.js";
 import teamsRouter from "../src/routes/teamsRoutes.js";
 import usersRouter from "../src/routes/usersRoutes.js";
+import overviewRouter from "../src/routes/overviewRoutes.js";
 
 const app = express();
 
@@ -87,6 +88,7 @@ app.use("/api/results", resultsRouter);
 app.use("/api/team-players", teamsPlayersRouter);
 app.use("/api/teams", teamsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/overview", overviewRouter);
 
 app.listen(config.port, () => console.log("Server started", config.port));
 
