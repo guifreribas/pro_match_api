@@ -1,6 +1,11 @@
 import Match from "../models/matchModel.js";
 import Team from "../models/teamModel.js";
 import config from "../config/config.js";
+import CompetitionCategory from "#src/models/competitionCategoryModel.js";
+import Category from "#src/models/categoryModel.js";
+import Organization from "#src/models/organizationModel.js";
+import Competition from "#src/models/competitionModel.js";
+import { Op } from "sequelize";
 
 export const getMatches = async (req, res) => {
 	const page = parseInt(req.query.page) || 1;
@@ -21,29 +26,74 @@ export const getMatches = async (req, res) => {
 	if (req.query.visitor_team) {
 		whereConditions.visitor_team = req.query.visitor_team;
 	}
-	if (req.query.date) {
-		whereConditions.date = req.query.date;
-	}
+
 	if (req.query.user_id) {
 		whereConditions.user_id = req.query.user_id;
 	}
+
+	if (req.query.dateBefore) {
+		whereConditions.date = {
+			[Op.lte]: new Date(req.query.dateBefore),
+		};
+	}
+	if (req.query.dateAfter) {
+		whereConditions.date = {
+			...whereConditions.date,
+			[Op.gte]: new Date(req.query.dateAfter),
+		};
+	}
+	if (req.query.date) {
+		whereConditions.date = {
+			...whereConditions.date,
+			[Op.eq]: new Date(req.query.date),
+		};
+	}
+	const include = [
+		{
+			model: Team,
+			as: "localTeam",
+			attributes: ["name", "avatar"],
+		},
+		{
+			model: Team,
+			as: "visitorTeam",
+			attributes: ["name", "avatar"],
+		},
+		{
+			model: CompetitionCategory,
+			include: [
+				{
+					model: Category,
+					attributes: ["name", "gender"],
+					include: [
+						{
+							model: Organization,
+							as: "organization",
+							attributes: ["name", "address", "logo"],
+						},
+					],
+				},
+				{
+					model: Competition,
+					attributes: ["name", "format", "is_initialized"],
+				},
+			],
+		},
+	];
+	// if (req.query.season) {
+	// 	include.push({
+	// 		model: CompetitionCategory,
+	// 		as: "competitionCategory",
+	// 		attributes: ["season"],
+	// 		where: { sease: req.query.season },
+	// 	});
+	// }
 	try {
 		const { count, rows } = await Match.findAndCountAll({
 			where: whereConditions,
 			offset,
 			limit,
-			include: [
-				{
-					model: Team,
-					as: "localTeam",
-					attributes: ["name", "avatar"],
-				},
-				{
-					model: Team,
-					as: "visitorTeam",
-					attributes: ["name", "avatar"],
-				},
-			],
+			include,
 		});
 		const totalPages = Math.ceil(count / limit);
 		const previousLink =
@@ -70,7 +120,41 @@ export const getMatches = async (req, res) => {
 						name: match.visitorTeam.name,
 						avatar: match.visitorTeam.avatar,
 					},
-					competition_category_id: match.competition_category_id,
+					competition_category: {
+						id_competition_category:
+							match.competition_category.id_competition_category,
+						season: match.competition_category.season,
+					},
+					competition: {
+						id_competition:
+							match.competition_category.competition
+								.id_competition,
+						name: match.competition_category.competition.name,
+						format: match.competition_category.competition.format,
+						is_initialized:
+							match.competition_category.competition
+								.is_initialized,
+					},
+					category: {
+						id_category:
+							match.competition_category.category.id_category,
+						name: match.competition_category.category.name,
+						gender: match.competition_category.category.gender,
+					},
+					organization: {
+						id_organization:
+							match.competition_category.category.organization
+								.id_organization,
+						name: match.competition_category.category.organization
+							.name,
+						address:
+							match.competition_category.category.organization
+								.address,
+						logo: match.competition_category.category.organization
+							.logo,
+					},
+					competition_category_id:
+						match.competition_category.competition_category_id,
 					user_id: match.user_id,
 					date: match.date,
 				})),
@@ -93,7 +177,10 @@ export const getMatches = async (req, res) => {
 		});
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({ error: "Error to get matches", error });
+		res.status(500).json({
+			error: "Error to get matches",
+			error: error.message,
+		});
 	}
 };
 
