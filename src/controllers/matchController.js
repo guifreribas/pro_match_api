@@ -13,6 +13,9 @@ export const getMatches = async (req, res) => {
 	const offset = (page - 1) * limit;
 
 	const whereConditions = {};
+	if (req.query.id_match) {
+		whereConditions.id_match = req.query.id_match;
+	}
 	if (req.query.status) {
 		whereConditions.status = req.query.status;
 	}
