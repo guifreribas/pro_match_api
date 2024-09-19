@@ -49,13 +49,13 @@ export const getCompetitions = async (req, res) => {
 		if (includeCompetitionType) {
 			include.push({
 				model: CompetitionType,
-				attributes: ["name"],
+				attributes: ["id_competition_type", "name"],
 			});
 		}
 		if (includeOrganization) {
 			include.push({
 				model: Organization,
-				attributes: ["name", "address", "logo"],
+				attributes: ["id_organization", "name", "address", "logo"],
 			});
 		}
 		if (includeCompetitionCategory) {
@@ -65,7 +65,7 @@ export const getCompetitions = async (req, res) => {
 				include: [
 					{
 						model: Category,
-						attributes: ["name", "gender"],
+						attributes: ["id_category", "name", "gender"],
 					},
 				],
 			});
@@ -98,11 +98,16 @@ export const getCompetitions = async (req, res) => {
 					is_initialized: competition?.is_initialized === 1,
 					competitionType: competition?.competition_type
 						? {
+								id_competition_type:
+									competition.competition_type
+										.id_competition_type,
 								name: competition.competition_type.name,
 						  }
 						: null,
 					organization: competition?.organization
 						? {
+								id_organization:
+									competition.organization.id_organization,
 								name: competition.organization.name,
 								address: competition.organization.address,
 								logo: competition.organization.logo,
@@ -118,6 +123,9 @@ export const getCompetitions = async (req, res) => {
 								category: competition.competition_category
 									.category
 									? {
+											id_category:
+												competition.competition_category
+													.category.id_category,
 											name: competition
 												.competition_category.category
 												.name,
@@ -304,7 +312,7 @@ export const updateCompetition = async (req, res) => {
 		const competition = await Competition.update(body, {
 			where: { id_competition: req.params.id },
 		});
-
+		console.log({ competition });
 		res.status(200).json({
 			success: true,
 			message: "Competition updated successfully",
