@@ -55,12 +55,12 @@ export const getMatches = async (req, res) => {
 		{
 			model: Team,
 			as: "localTeam",
-			attributes: ["name", "avatar"],
+			attributes: ["id_team", "name", "avatar"],
 		},
 		{
 			model: Team,
 			as: "visitorTeam",
-			attributes: ["name", "avatar"],
+			attributes: ["id_team", "name", "avatar"],
 		},
 		{
 			model: CompetitionCategory,
