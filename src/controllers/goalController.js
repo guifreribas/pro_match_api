@@ -112,7 +112,10 @@ export const createGoal = async (req, res) => {
 			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
-		res.status(500).json({ error: "Error to create goal" });
+		res.status(500).json({
+			error: "Error to create goal",
+			message: error.message,
+		});
 	}
 };
 
