@@ -12,10 +12,12 @@ const Card = sequelize.define(
 		card_type: {
 			type: DataTypes.ENUM("YELLOW", "RED", "BLUE"),
 			allowNull: false,
+			required: true,
 		},
 		minute: {
 			type: DataTypes.INTEGER(3),
 			allowNull: false,
+			required: true,
 		},
 		part: {
 			type: DataTypes.ENUM(
@@ -26,22 +28,27 @@ const Card = sequelize.define(
 				"PENALTIES"
 			),
 			allowNull: false,
+			required: true,
 		},
 		match_id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
+			required: true,
 		},
 		player_id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
+			required: true,
 		},
 		team_id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
+			required: true,
 		},
 		user_id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,
+			required: true,
 		},
 	},
 	{
