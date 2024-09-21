@@ -14,6 +14,7 @@ import User from "#models/userModel.js";
 import CompetitionCategory from "#src/models/competitionCategoryModel.js";
 import CompetitionTeam from "#src/models/competitionTeamModel.js";
 import CompetitionType from "#src/models/competitionTypeModel.js";
+import MatchPlayer from "#src/models/matchPlayerModel.js";
 
 export function setupAssociations() {
 	// Relacions pel model "Card"
@@ -68,6 +69,13 @@ export function setupAssociations() {
 	Match.belongsTo(User, { foreignKey: "user_id" });
 	Match.belongsTo(Team, { as: "localTeam", foreignKey: "local_team" });
 	Match.belongsTo(Team, { as: "visitorTeam", foreignKey: "visitor_team" });
+	Match.hasMany(MatchPlayer, { foreignKey: "match_id" });
+
+	// Relacions pel model "MatchPlayer"
+	MatchPlayer.belongsTo(Match, { foreignKey: "match_id" });
+	MatchPlayer.belongsTo(Player, { foreignKey: "player_id" });
+	MatchPlayer.belongsTo(Team, { foreignKey: "team_id" });
+	MatchPlayer.belongsTo(TeamPlayer, { foreignKey: "team_player_id" });
 
 	// Relacions pel model "Organization"
 	Organization.belongsTo(User, { foreignKey: "user_id" });
@@ -75,6 +83,7 @@ export function setupAssociations() {
 	// Relacions pel model "Player"
 	Player.belongsTo(User, { foreignKey: "user_id" });
 	Player.hasMany(TeamPlayer, { foreignKey: "player_id" });
+	Player.hasMany(MatchPlayer, { foreignKey: "player_id" });
 
 	// Relacions pel model "Result"
 	Result.belongsTo(Match, { foreignKey: "match_id" });
@@ -84,11 +93,13 @@ export function setupAssociations() {
 	Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
 	Team.hasMany(Match, { foreignKey: "local_team", as: "homeMatches" });
 	Team.hasMany(Match, { foreignKey: "visitor_team", as: "awayMatches" });
+	Team.hasMany(MatchPlayer, { foreignKey: "team_id" });
 
 	// Relacions pel model "TeamPlayer"
 	TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
 	TeamPlayer.belongsTo(Player, { foreignKey: "player_id" });
 	TeamPlayer.belongsTo(User, { foreignKey: "user_id" });
+	TeamPlayer.hasMany(MatchPlayer, { foreignKey: "team_player_id" });
 
 	// Relacions pel model "User"
 	User.hasMany(Organization, { foreignKey: "user_id" });
