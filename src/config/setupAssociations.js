@@ -15,6 +15,7 @@ import CompetitionCategory from "#src/models/competitionCategoryModel.js";
 import CompetitionTeam from "#src/models/competitionTeamModel.js";
 import CompetitionType from "#src/models/competitionTypeModel.js";
 import MatchPlayer from "#src/models/matchPlayerModel.js";
+import Standings from "#src/models/standingsModel.js";
 
 export function setupAssociations() {
 	// Relacions pel model "Card"
@@ -33,6 +34,9 @@ export function setupAssociations() {
 	});
 	CompetitionCategory.belongsTo(Category, { foreignKey: "category_id" });
 	CompetitionCategory.belongsTo(User, { foreignKey: "user_id" });
+	CompetitionCategory.hasMany(Standings, {
+		foreignKey: "competition_category_id",
+	});
 
 	// Relacions pel model "Competition"
 	Competition.belongsTo(CompetitionType, {
@@ -41,6 +45,7 @@ export function setupAssociations() {
 	Competition.belongsTo(Organization, { foreignKey: "organization_id" });
 	Competition.belongsTo(User, { foreignKey: "user_id" });
 	Competition.hasOne(CompetitionCategory, { foreignKey: "competition_id" });
+	Competition.hasMany(Standings, { foreignKey: "competition_id" });
 
 	// Relacions pel model "CompetitionTeam"
 	CompetitionTeam.belongsTo(CompetitionCategory, {
@@ -88,12 +93,21 @@ export function setupAssociations() {
 	// Relacions pel model "Result"
 	Result.belongsTo(Match, { foreignKey: "match_id" });
 
+	// Relacions pel model "Standings"
+	Standings.belongsTo(Team, { foreignKey: "team_id" });
+	Standings.belongsTo(User, { foreignKey: "user_id" });
+	Standings.belongsTo(Competition, { foreignKey: "competition_id" });
+	Standings.belongsTo(CompetitionCategory, {
+		foreignKey: "competition_category_id",
+	});
+
 	// Relacions pel model "Team"
 	Team.belongsTo(User, { foreignKey: "user_id" });
 	Team.hasMany(TeamPlayer, { foreignKey: "team_id" });
 	Team.hasMany(Match, { foreignKey: "local_team", as: "homeMatches" });
 	Team.hasMany(Match, { foreignKey: "visitor_team", as: "awayMatches" });
 	Team.hasMany(MatchPlayer, { foreignKey: "team_id" });
+	Team.hasMany(Standings, { foreignKey: "team_id" });
 
 	// Relacions pel model "TeamPlayer"
 	TeamPlayer.belongsTo(Team, { foreignKey: "team_id" });
@@ -108,6 +122,7 @@ export function setupAssociations() {
 	User.hasMany(TeamPlayer, { foreignKey: "user_id" });
 	User.hasMany(Match, { foreignKey: "user_id" });
 	User.hasMany(Card, { foreignKey: "user_id" });
+	User.hasMany(Standings, { foreignKey: "user_id" });
 }
 
 // export function setupAssociations() {
