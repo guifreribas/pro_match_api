@@ -6,6 +6,7 @@ import Category from "#src/models/categoryModel.js";
 import Organization from "#src/models/organizationModel.js";
 import Competition from "#src/models/competitionModel.js";
 import { Op } from "sequelize";
+import { sequelize } from "#src/db.js";
 
 export const getMatches = async (req, res) => {
 	const page = parseInt(req.query.page) || 1;
@@ -230,6 +231,8 @@ export const createMatch = async (req, res) => {
 };
 
 export const updateMatch = async (req, res) => {
+	console.log("BODY: ", req.body);
+	console.log("PARAMS: ", req.params);
 	try {
 		const match = await Match.update(req.body, {
 			where: { id_match: req.params.id },
