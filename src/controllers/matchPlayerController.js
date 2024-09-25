@@ -3,7 +3,6 @@ import config from "../config/config.js";
 import Player from "#src/models/playerModel.js";
 import Team from "#src/models/teamModel.js";
 import TeamPlayer from "#src/models/teamPlayerModel.js";
-import { Sequelize } from "sequelize";
 
 export const getMatchPlayers = async (req, res) => {
 	const page = parseInt(req.query.page) || 1;
