@@ -35,7 +35,7 @@ export const getCompetitions = async (req, res) => {
 	if (query.competition_type_id) {
 		whereConditions.competition_type_id = query.competition_type_id;
 	}
-	if (req.user.id_user) {
+	if (query.id_user) {
 		whereConditions.user_id = req.user.id_user;
 	}
 
