@@ -79,7 +79,12 @@ export const getMatches = async (req, res) => {
 				},
 				{
 					model: Competition,
-					attributes: ["name", "format", "is_initialized"],
+					attributes: [
+						"id_competition",
+						"name",
+						"format",
+						"is_initialized",
+					],
 				},
 			],
 		},
