@@ -303,6 +303,27 @@ export const createCompetitionFull = async (req, res) => {
 	}
 };
 
+export const initializeCompetition = async (req, res) => {
+	try {
+		const competition = await Competition.update(req.body, {
+			where: { id_competition: req.params.id },
+		});
+
+		res.status(200).json({
+			status: "success",
+			message: "Competition updated successfully",
+			data: competition,
+			timestamp: new Date().toISOString(),
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			error: "Error to update competition",
+			message: error.message,
+		});
+	}
+};
+
 export const updateCompetition = async (req, res) => {
 	const body = { ...req.body };
 	if (req.body.is_initialized === true) {
