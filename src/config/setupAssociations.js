@@ -46,6 +46,7 @@ export function setupAssociations() {
 	Competition.belongsTo(User, { foreignKey: "user_id" });
 	Competition.hasOne(CompetitionCategory, { foreignKey: "competition_id" });
 	Competition.hasMany(Standings, { foreignKey: "competition_id" });
+	Competition.hasMany(Goal, { foreignKey: "competition_id" });
 
 	// Relacions pel model "CompetitionTeam"
 	CompetitionTeam.belongsTo(CompetitionCategory, {
@@ -66,6 +67,8 @@ export function setupAssociations() {
 	Goal.belongsTo(Match, { foreignKey: "match_id" });
 	Goal.belongsTo(Player, { foreignKey: "player_id" });
 	Goal.belongsTo(Team, { foreignKey: "team_id" });
+	Goal.belongsTo(User, { foreignKey: "user_id" });
+	Goal.belongsTo(Competition, { foreignKey: "competition_id" });
 
 	// Relacions pel model "Match"
 	Match.belongsTo(CompetitionCategory, {
@@ -123,6 +126,7 @@ export function setupAssociations() {
 	User.hasMany(Match, { foreignKey: "user_id" });
 	User.hasMany(Card, { foreignKey: "user_id" });
 	User.hasMany(Standings, { foreignKey: "user_id" });
+	User.hasMany(Goal, { foreignKey: "user_id" });
 }
 
 // export function setupAssociations() {
