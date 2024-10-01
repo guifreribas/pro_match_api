@@ -5,6 +5,7 @@ import {
 	deleteCompetition,
 	getCompetition,
 	getCompetitions,
+	initializeCompetition,
 	updateCompetition,
 } from "../controllers/competitionController.js";
 import { authenticateToken } from "../middlewares/authenticateToken.js";
@@ -15,6 +16,7 @@ const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 router.get("/", getCompetitions);
 router.get("/:id", authenticateToken(allRoles), getCompetition);
 router.post("/full", authenticateToken(allRoles), createCompetitionFull);
+router.post("/initialize", authenticateToken(allRoles), initializeCompetition);
 router.post("/", authenticateToken(allRoles), createCompetition);
 router.put("/:id", authenticateToken(allRoles), updateCompetition);
 router.delete("/:id", authenticateToken(allRoles), deleteCompetition);
