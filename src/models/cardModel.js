@@ -45,6 +45,11 @@ const Card = sequelize.define(
 			allowNull: false,
 			required: true,
 		},
+		competition_id: {
+			type: DataTypes.INTEGER(10).UNSIGNED,
+			allowNull: false,
+			required: true,
+		},
 		user_id: {
 			type: DataTypes.INTEGER(10).UNSIGNED,
 			allowNull: false,

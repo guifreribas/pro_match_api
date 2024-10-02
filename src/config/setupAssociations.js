@@ -23,6 +23,7 @@ export function setupAssociations() {
 	Card.belongsTo(Player, { foreignKey: "player_id" });
 	Card.belongsTo(Team, { foreignKey: "team_id" });
 	Card.belongsTo(User, { foreignKey: "user_id" });
+	Card.belongsTo(Competition, { foreignKey: "competition_id" });
 
 	// Relacions pel model "Category"
 	Category.belongsTo(Organization, { foreignKey: "organization_id" });
@@ -47,6 +48,7 @@ export function setupAssociations() {
 	Competition.hasOne(CompetitionCategory, { foreignKey: "competition_id" });
 	Competition.hasMany(Standings, { foreignKey: "competition_id" });
 	Competition.hasMany(Goal, { foreignKey: "competition_id" });
+	Competition.hasMany(Card, { foreignKey: "competition_id" });
 
 	// Relacions pel model "CompetitionTeam"
 	CompetitionTeam.belongsTo(CompetitionCategory, {
