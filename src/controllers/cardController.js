@@ -31,6 +31,7 @@ export const getCards = async (req, res) => {
 		const { count, rows } = await Card.findAndCountAll({
 			offset,
 			limit,
+			where: whereConditions,
 		});
 		const totalPages = Math.ceil(count / limit);
 		const previousLink =
