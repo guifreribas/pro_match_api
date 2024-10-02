@@ -27,6 +27,9 @@ export const getStandings = async (req, res) => {
 	if (req.query.user_id) {
 		whereConditions.user_id = req.query.user_id;
 	}
+	if (req.query.team_id) {
+		whereConditions.team_id = req.query.team_id;
+	}
 
 	const sorteableFields = [
 		"matches_played",
