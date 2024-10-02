@@ -7,6 +7,8 @@ import Organization from "#src/models/organizationModel.js";
 import Competition from "#src/models/competitionModel.js";
 import { Op } from "sequelize";
 import { sequelize } from "#src/db.js";
+import Player from "#src/models/playerModel.js";
+import MatchPlayer from "#src/models/matchPlayerModel.js";
 
 export const getMatches = async (req, res) => {
 	const page = parseInt(req.query.page) || 1;
@@ -97,6 +99,24 @@ export const getMatches = async (req, res) => {
 	// 		where: { sease: req.query.season },
 	// 	});
 	// }
+
+	if (req.query.player_id) {
+		console.log("Player ID:", req.query.player_id);
+		include.push({
+			model: MatchPlayer,
+			// as: "match_players",
+			required: true,
+			where: { player_id: req.query.player_id },
+			include: [
+				{
+					model: Player,
+					// as: "player",
+					attributes: ["id_player", "name", "last_name", "avatar"],
+				},
+			],
+		});
+	}
+
 	try {
 		const { count, rows } = await Match.findAndCountAll({
 			where: whereConditions,
@@ -116,57 +136,72 @@ export const getMatches = async (req, res) => {
 			success: true,
 			message: "Matches fetched successfully",
 			data: {
-				items: rows.map((match) => ({
-					id_match: match.id_match,
-					status: match.status,
-					local_team: {
-						id_team: match.localTeam.id_team,
-						name: match.localTeam.name,
-						avatar: match.localTeam.avatar,
-					},
-					visitor_team: {
-						id_team: match.visitorTeam.id_team,
-						name: match.visitorTeam.name,
-						avatar: match.visitorTeam.avatar,
-					},
-					competition_category: {
-						id_competition_category:
-							match.competition_category.id_competition_category,
-						season: match.competition_category.season,
-					},
-					competition: {
-						id_competition:
-							match.competition_category.competition
-								.id_competition,
-						name: match.competition_category.competition.name,
-						format: match.competition_category.competition.format,
-						is_initialized:
-							match.competition_category.competition
-								.is_initialized,
-					},
-					category: {
-						id_category:
-							match.competition_category.category.id_category,
-						name: match.competition_category.category.name,
-						gender: match.competition_category.category.gender,
-					},
-					organization: {
-						id_organization:
-							match.competition_category.category.organization
-								.id_organization,
-						name: match.competition_category.category.organization
-							.name,
-						address:
-							match.competition_category.category.organization
-								.address,
-						logo: match.competition_category.category.organization
-							.logo,
-					},
-					competition_category_id:
-						match.competition_category.competition_category_id,
-					user_id: match.user_id,
-					date: match.date,
-				})),
+				items: rows.map((match) => {
+					const matchData = {
+						id_match: match.id_match,
+						status: match.status,
+						local_team: {
+							id_team: match.localTeam.id_team,
+							name: match.localTeam.name,
+							avatar: match.localTeam.avatar,
+						},
+						visitor_team: {
+							id_team: match.visitorTeam.id_team,
+							name: match.visitorTeam.name,
+							avatar: match.visitorTeam.avatar,
+						},
+						competition_category: {
+							id_competition_category:
+								match.competition_category
+									.id_competition_category,
+							season: match.competition_category.season,
+						},
+						competition: {
+							id_competition:
+								match.competition_category.competition
+									.id_competition,
+							name: match.competition_category.competition.name,
+							format: match.competition_category.competition
+								.format,
+							is_initialized:
+								match.competition_category.competition
+									.is_initialized,
+						},
+						category: {
+							id_category:
+								match.competition_category.category.id_category,
+							name: match.competition_category.category.name,
+							gender: match.competition_category.category.gender,
+						},
+						organization: {
+							id_organization:
+								match.competition_category.category.organization
+									.id_organization,
+							name: match.competition_category.category
+								.organization.name,
+							address:
+								match.competition_category.category.organization
+									.address,
+							logo: match.competition_category.category
+								.organization.logo,
+						},
+						competition_category_id:
+							match.competition_category.competition_category_id,
+						user_id: match.user_id,
+						date: match.date,
+					};
+
+					if (req.query.player_id && match.match_players) {
+						matchData.players = match.match_players.map((mp) => ({
+							id_player: mp.player.id_player,
+							name: mp.player.name,
+							last_name: mp.player.last_name,
+							avatar: mp.player.avatar,
+						}));
+					}
+
+					return matchData;
+				}),
 				itemCount: rows.length,
 				totalItems: count,
 				currentPage: page,
