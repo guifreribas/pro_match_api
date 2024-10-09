@@ -118,15 +118,16 @@ export const updateTeam = async (req, res) => {
 		const team = await Team.update(req.body, {
 			where: { id_team: req.params.id },
 		});
+		const teamUpdated = await Team.findByPk(req.params.id);
 
 		res.status(200).json({
 			status: "success",
 			message: "Team updated successfully",
-			data: team,
+			data: teamUpdated,
 			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
-		res.status(500).json({ error: "Error to update team" });
+		res.status(500).json({ error: "Error to update team", message: error });
 	}
 };
 
