@@ -271,17 +271,17 @@ export const createMatch = async (req, res) => {
 };
 
 export const updateMatch = async (req, res) => {
-	console.log("BODY: ", req.body);
-	console.log("PARAMS: ", req.params);
 	try {
-		const match = await Match.update(req.body, {
+		await Match.update(req.body, {
 			where: { id_match: req.params.id },
 		});
+
+		const matchUpdated = await Match.findByPk(req.params.id);
 
 		res.status(200).json({
 			status: "success",
 			message: "Match updated successfully",
-			data: match,
+			data: matchUpdated,
 			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
