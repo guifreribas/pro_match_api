@@ -159,11 +159,12 @@ export const updatePlayer = async (req, res) => {
 		const player = await Player.update(req.body, {
 			where: { id_player: req.params.id },
 		});
+		const playerUpdated = await Player.findByPk(req.params.id);
 
 		res.status(200).json({
 			status: "success",
 			message: "Player updated successfully",
-			data: player,
+			data: playerUpdated,
 			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
