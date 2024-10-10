@@ -12,7 +12,7 @@ const router = Router();
 const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
 router.get("/", getOrganizations);
-router.get("/:id", authenticateToken(allRoles), getOrganization);
+router.get("/:id", getOrganization);
 router.post("/", authenticateToken(allRoles), createOrganization);
 router.put("/:id", authenticateToken(allRoles), updateOrganization);
 router.delete("/:id", authenticateToken(allRoles), deleteOrganization);

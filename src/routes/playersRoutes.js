@@ -11,8 +11,8 @@ import { authenticateToken } from "../middlewares/authenticateToken.js";
 const router = Router();
 const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
-router.get("/", authenticateToken(allRoles), getPlayers);
-router.get("/:id", authenticateToken(allRoles), getPlayer);
+router.get("/", getPlayers);
+router.get("/:id", getPlayer);
 router.post("/", authenticateToken(allRoles), createPlayer);
 router.post("/", authenticateToken(allRoles), createPlayer);
 router.put("/:id", authenticateToken(allRoles), updatePlayer);

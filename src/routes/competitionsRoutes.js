@@ -14,7 +14,7 @@ const router = Router();
 const allRoles = ["ADMIN", "SUPER_ADMIN", "USER"];
 
 router.get("/", getCompetitions);
-router.get("/:id", authenticateToken(allRoles), getCompetition);
+router.get("/:id", getCompetition);
 router.post("/full", authenticateToken(allRoles), createCompetitionFull);
 router.post("/initialize", authenticateToken(allRoles), initializeCompetition);
 router.post("/", authenticateToken(allRoles), createCompetition);
