@@ -1,6 +1,8 @@
 import Card from "../models/cardModel.js";
 import config from "../config/config.js";
 import { sequelize } from "#src/db.js";
+import Player from "#src/models/playerModel.js";
+import Team from "#src/models/teamModel.js";
 
 export const getCards = async (req, res) => {
 	const page = parseInt(req.query.page) || 1;
@@ -194,6 +196,94 @@ export const deleteCard = async (req, res) => {
 			success: false,
 			message: "Error to delete card",
 			data: null,
+			timestamp: new Date().toISOString(),
+		});
+	}
+};
+
+export const getPlayerCardsStats = async (req, res) => {
+	// console.log("Params:", req.params);
+	// const competitionId = req.params.competitionId;
+	const whereConditions = {};
+	if (req.query.id_card) {
+		whereConditions.id_card = req.query.id_card;
+	}
+	if (req.query.minute) {
+		whereConditions.minute = req.query.minute;
+	}
+	if (req.query.part) {
+		whereConditions.part = req.query.part;
+	}
+	if (req.query.match_id) {
+		whereConditions.match_id = req.query.match_id;
+	}
+	if (req.query.player_id) {
+		whereConditions.player_id = req.query.player_id;
+	}
+	if (req.query.team_id) {
+		whereConditions.team_id = req.query.team_id;
+	}
+	if (req.query.competition_id) {
+		whereConditions.competition_id = req.query.competition_id;
+	}
+	try {
+		const playerCardStats = await Card.findAll({
+			attributes: [
+				"player_id",
+				[
+					sequelize.fn(
+						"SUM",
+						sequelize.literal(
+							`CASE WHEN card_type = 'YELLOW' THEN 1 ELSE 0 END`
+						)
+					),
+					"yellowCards",
+				],
+				[
+					sequelize.fn(
+						"SUM",
+						sequelize.literal(
+							`CASE WHEN card_type = 'RED' THEN 1 ELSE 0 END`
+						)
+					),
+					"redCards",
+				],
+				[
+					sequelize.fn(
+						"SUM",
+						sequelize.literal(
+							`CASE WHEN card_type = 'BLUE' THEN 1 ELSE 0 END`
+						)
+					),
+					"blueCards",
+				],
+			],
+			where: whereConditions,
+			group: ["player_id"],
+			include: [
+				{
+					model: Player,
+					attributes: ["id_player", "name", "last_name", "avatar"],
+				},
+				{
+					model: Team,
+					attributes: ["id_team", "name", "avatar"],
+				},
+			],
+		});
+
+		res.status(200).json({
+			success: true,
+			message: "Player card stats fetched successfully",
+			data: playerCardStats,
+			timestamp: new Date().toISOString(),
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			success: false,
+			message: "Error fetching player card stats",
+			data: error.message,
 			timestamp: new Date().toISOString(),
 		});
 	}
