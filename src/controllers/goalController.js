@@ -214,6 +214,7 @@ export const getGoalScorers = async (req, res) => {
 				],
 			],
 			group: ["player_id"],
+			order: [[Sequelize.literal("total_goals"), "DESC"]],
 			offset,
 			limit,
 			include: [
