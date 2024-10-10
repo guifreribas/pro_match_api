@@ -142,10 +142,62 @@ export const getMatchPlayer = async (req, res) => {
 export const createMatchPlayer = async (req, res) => {
 	try {
 		const matchPlayer = await MatchPlayer.create(req.body);
+
+		const createdMatchPlayer = await MatchPlayer.findOne({
+			where: { id_match_player: matchPlayer.id_match_player },
+			include: [
+				{
+					model: Player,
+					attributes: [
+						"id_player",
+						"name",
+						"last_name",
+						"dni",
+						"avatar",
+					],
+				},
+				{
+					model: Team,
+					attributes: ["id_team", "name", "avatar"],
+				},
+				{
+					model: TeamPlayer,
+					attributes: ["player_number"],
+				},
+			],
+		});
+
+		const data = {
+			id_match_player: createdMatchPlayer.id_match_player,
+			match_id: createdMatchPlayer.match_id,
+			player_id: createdMatchPlayer.player_id,
+			team_id: createdMatchPlayer.team_id,
+			user_id: createdMatchPlayer.user_id,
+			player: createdMatchPlayer?.player
+				? {
+						id_player: createdMatchPlayer.player.id_player,
+						name: createdMatchPlayer.player.name,
+						last_name: createdMatchPlayer.player.last_name,
+						dni: createdMatchPlayer.player.dni,
+						avatar: createdMatchPlayer.player.avatar,
+				  }
+				: null,
+			team: createdMatchPlayer?.team
+				? {
+						id_team: createdMatchPlayer.team.id_team,
+						name: createdMatchPlayer.team.name,
+						avatar: createdMatchPlayer.team.avatar,
+				  }
+				: null,
+			player_number: createdMatchPlayer?.TeamPlayer
+				? createdMatchPlayer.TeamPlayer.player_number
+				: null,
+		};
+
 		res.status(201).json({
 			success: true,
 			message: "MatchPlayer created successfully",
-			data: matchPlayer,
+			data: data,
 			timestamp: new Date().toISOString(),
 		});
 	} catch (error) {
